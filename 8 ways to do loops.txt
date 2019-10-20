@@ -1,0 +1,117 @@
+'==============================================================
+' This workbook was prepared and coded by Martin Green to help
+' Excel users learn about VBA. Visit my web site for tips and
+' tutorials on Microsoft Office and details of my Training and
+' Consultancy services: http://www.fontstuff.com
+'==============================================================
+
+Sub Loop1()
+' This loop runs until there is nothing in the next column
+    Do
+    ActiveCell.FormulaR1C1 = "=Average(RC[-1],RC[-2])"
+    ActiveCell.Offset(1, 0).Select
+    Loop Until IsEmpty(ActiveCell.Offset(0, 1))
+End Sub
+
+Sub Loop2()
+' This loop runs as long as there is something in the next column
+    Do While IsEmpty(ActiveCell.Offset(0, 1)) = False
+    ActiveCell.FormulaR1C1 = "=Average(RC[-1],RC[-2])"
+    ActiveCell.Offset(1, 0).Select
+    Loop
+End Sub
+
+Sub Loop3()
+'This loop runs as long as there is something in the next column
+ Do While Not IsEmpty(ActiveCell.Offset(0, 1))
+ ActiveCell.FormulaR1C1 = "=Average(RC[-1],RC[-2])"
+ ActiveCell.Offset(1, 0).Select
+ Loop
+End Sub
+
+Sub Loop4()
+ 'This loop runs as long as there is something in the next column
+
+ 'It does not calculate an average if there is already something in the cell
+ Do
+ If IsEmpty(ActiveCell) Then
+    ActiveCell.FormulaR1C1 = "=Average(RC[-1],RC[-2])"
+ End If
+ ActiveCell.Offset(1, 0).Select
+ Loop Until IsEmpty(ActiveCell.Offset(0, 1))
+End Sub
+
+Sub Loop5()
+
+' This loop runs as long as there is something in the next column
+
+' It does not calculate an average if there is already something in the cell
+
+' nor if there is no data to average (to avoid #DIV/0 errors).
+
+    Do
+
+    If IsEmpty(ActiveCell) Then
+
+        If IsEmpty(ActiveCell.Offset(0, -1)) And IsEmpty(ActiveCell.Offset(0, -2)) Then
+
+            ActiveCell.Value = ""
+
+        Else
+
+            ActiveCell.FormulaR1C1 = "=Average(RC[-1],RC[-2])"
+
+        End If
+
+    End If
+
+    ActiveCell.Offset(1, 0).Select
+
+    Loop Until IsEmpty(ActiveCell.Offset(0, 1))
+
+End Sub
+
+Sub Loop6()
+'This loop repeats for a fixed number of times determined by the number of rows in the range
+   
+    Dim i As Integer
+    
+    For i = 1 To Selection.CurrentRegion.Rows.Count - 1
+    
+    ActiveCell.FormulaR1C1 = "=Average(RC[-1],RC[-2])"
+    
+    ActiveCell.Offset(1, 0).Select
+    
+    Next i
+ 
+End Sub
+
+Sub Loop7()
+
+' This loop repeats a fixed number of times getting its reference from elsewhere
+
+    Dim i As Integer
+
+    Dim intRowCount As Integer
+
+    intRowCount = Range("A1").CurrentRegion.Rows.Count - 1
+
+    For i = 1 To intRowCount
+
+    ActiveCell.FormulaR1C1 = "=Average(RC[-1],RC[-2])"
+
+    ActiveCell.Offset(1, 0).Select
+
+    Next i
+
+End Sub
+
+Sub Loop8()
+
+ Do
+ 
+ ActiveCell.Value = WorksheetFunction.Average(ActiveCell.Offset(0, -1).Value, ActiveCell.Offset(0, -2).Value)
+ ActiveCell.Offset(1, 0).Select
+ Loop Until IsEmpty(ActiveCell.Offset(0, 1))
+ 
+End Sub

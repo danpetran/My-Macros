@@ -1,0 +1,88 @@
+Option Explicit
+
+'Copy a range/column after the last column with data
+'
+'Note: This example use the function LastCol
+'
+'This example copy column A from each sheet after the last column with data on the DestSh.
+'I use A:A to copy the whole column but you can also use a range like A1:A10
+'Use A:C if you want to copy more columns.
+'
+'Change it here
+'
+''Fill in the column(s) that you want to copy
+'Set CopyRng = sh.Range("A:A")
+'
+'Remember that Excel 97-2003 have only 256 columns.
+'Excel 2007 has 16384 columns.
+
+'When you run one of the examples it will first delete the summary worksheet
+'named RDBMergeSheet if it exists and then adds a new one to the workbook.
+'This ensures that the data is always up to date after you run the code.
+
+'*****READ THE TIPS on the website****
+
+
+Sub AppendDataAfterLastColumn()
+    Dim sh As Worksheet
+    Dim DestSh As Worksheet
+    Dim Last As Long
+    Dim CopyRng As Range
+
+    With Application
+        .ScreenUpdating = False
+        .EnableEvents = False
+    End With
+
+    'Delete the sheet "RDBMergeSheet" if it exist
+    Application.DisplayAlerts = False
+    On Error Resume Next
+    ActiveWorkbook.Worksheets("RDBMergeSheet").Delete
+    On Error GoTo 0
+    Application.DisplayAlerts = True
+
+    'Add a worksheet with the name "RDBMergeSheet"
+    Set DestSh = ActiveWorkbook.Worksheets.Add
+    DestSh.Name = "RDBMergeSheet"
+
+    'loop through all worksheets and copy the data to the DestSh
+    For Each sh In ActiveWorkbook.Worksheets
+
+        'Loop through all worksheets except the RDBMerge worksheet and the
+        'Information worksheet, you can ad more sheets to the array if you want.
+        If IsError(Application.Match(sh.Name, _
+                                     Array(DestSh.Name, "Information"), 0)) Then
+
+            'Find the last Column with data on the DestSh
+            Last = LastCol(DestSh)
+
+            'Fill in the column(s) that you want to copy
+            Set CopyRng = sh.Range("A:A")
+
+            'Test if there enough rows in the DestSh to copy all the data
+            If Last + CopyRng.Columns.Count > DestSh.Columns.Count Then
+                MsgBox "There are not enough columns in the Destsh"
+                GoTo ExitTheSub
+            End If
+
+            'This example copies values/formats and Column width
+            CopyRng.Copy
+            With DestSh.Cells(1, Last + 1)
+                .PasteSpecial 8    ' Column width
+                .PasteSpecial xlPasteValues
+                .PasteSpecial xlPasteFormats
+                Application.CutCopyMode = False
+            End With
+
+        End If
+    Next
+
+ExitTheSub:
+
+    Application.GoTo DestSh.Cells(1)
+
+    With Application
+        .ScreenUpdating = True
+        .EnableEvents = True
+    End With
+End Sub

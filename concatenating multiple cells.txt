@@ -1,0 +1,10 @@
+Sub stantiate()
+Dim myrange As Range
+With ActiveSheet
+lastrow = .Cells(.Rows.Count, "A").End(xlUp).Row
+End With
+Set myrange = Range("A1:A" & lastrow)
+For Each c In myrange
+Cells(1, 2).Value = Cells(1, 2).Value & c.Value & "'" & " , " & "'"
+Next
+End Sub

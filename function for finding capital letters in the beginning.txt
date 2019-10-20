@@ -1,0 +1,12 @@
+Function getcaps(rng As Range) As String
+For x = 1 To Len(rng)
+If Mid(rng, x, 1) Like "[A-Z]" And _
+Not Mid(rng, x + 1, 1) Like "[a-z]" Then
+If Mid(rng, x + 1, 1) <> " " Then
+getcaps = getcaps & Mid(rng, x, 1)
+Else
+getcaps = getcaps & Mid(rng, x, 1) & " "
+End If
+End If
+Next
+End Function

@@ -1,0 +1,7 @@
+Sub ColorThem()
+Selection.SpecialCells(xlCellTypeFormulas).Select
+  With Selection.Interior
+       .colorIndex = 44
+       .Pattern = xlSolid
+  End With
+End Sub  

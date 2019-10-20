@@ -1,0 +1,3 @@
+Function WkbName()
+WkbName = ActiveWorkbook.Name
+End Function

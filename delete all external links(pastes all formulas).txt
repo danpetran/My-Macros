@@ -1,0 +1,10 @@
+Sub DeleteExLinks()
+Dim rng As Range
+With ActiveSheet
+For Each rng In .UsedRange
+If InStr(rng.Formula, "[") > 0 Then
+rng.Value = rng.Value
+End If
+Next rng
+End With
+End Sub

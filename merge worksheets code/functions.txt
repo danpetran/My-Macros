@@ -1,0 +1,30 @@
+Option Explicit
+
+'Common Functions required for all routines:
+
+Function LastRow(sh As Worksheet)
+    On Error Resume Next
+    LastRow = sh.Cells.Find(what:="*", _
+                            After:=sh.Range("A1"), _
+                            Lookat:=xlPart, _
+                            LookIn:=xlFormulas, _
+                            SearchOrder:=xlByRows, _
+                            SearchDirection:=xlPrevious, _
+                            MatchCase:=False).Row
+    On Error GoTo 0
+End Function
+
+
+Function LastCol(sh As Worksheet)
+    On Error Resume Next
+    LastCol = sh.Cells.Find(what:="*", _
+                            After:=sh.Range("A1"), _
+                            Lookat:=xlPart, _
+                            LookIn:=xlFormulas, _
+                            SearchOrder:=xlByColumns, _
+                            SearchDirection:=xlPrevious, _
+                            MatchCase:=False).Column
+    On Error GoTo 0
+End Function
+
+

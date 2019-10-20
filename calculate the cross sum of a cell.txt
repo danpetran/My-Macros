@@ -1,0 +1,6 @@
+Function Qs(rng As Range)
+Dim i As Integer
+For i = 1 To Len(rng.Value)
+Qs = Qs+Cint (Mid(rng.Value, i, 1))
+Next i
+End Function

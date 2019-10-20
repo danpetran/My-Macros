@@ -1,0 +1,8 @@
+Sub Proper_Case()
+'Loop to cycle through each cell in the specified range
+  For Each x in Range("A1:D40")
+ 'There is not a Proper function in VBA
+ 'So you must use the worksheet function in the following form
+
+Next
+End Sub

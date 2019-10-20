@@ -1,0 +1,1 @@
+case WHEN Activity.Type IN ('Presentation', 'Meeting', 'Personal', 'Visit') then 'Face-to-Face' WHEN Activity.Type IN ('Call', 'Email', 'Telephone Conference', 'Webex') then 'Impersonal' else 'Other' end

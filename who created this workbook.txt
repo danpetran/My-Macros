@@ -1,0 +1,11 @@
+Function WHO()
+temp = "Created by "
+Dim Workbook As Workbook
+Set Workbook = Application.ActiveWorkbook
+For Each property In Workbook.BuiltinDocumentProperties
+On Error Resume Next
+If property.Name = "Author" Then temp = temp & property.Value
+If property.Name = "Creation date" Then temp = temp & " on " & property.Value
+Next property
+WHO = temp
+End Function

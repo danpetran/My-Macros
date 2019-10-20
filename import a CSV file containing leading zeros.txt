@@ -1,0 +1,7 @@
+Sub ImportLeadingZeros()
+On Error Resume Next
+Kill "C:\temp\LeadingZero.txt"
+On Error GoTo 0
+Name "C:\temp\LeadingZero.CSV" As "C:\temp\LeadingZero.txt"
+Workbooks.OpenText Filename:="C:\temp\LeadingZero.txt", Origin:=xlMSDOS, StartRow:=1, DataType:=xlDelimited, Textqualifier:=xlDoubleQuote, ConsecutiveDelimiter:=False, Tab:=False, Semicolon:=False, Comma:=True, Space:=Falase, Other:=False, FieldInfo:=Array(Array(1, 1), Array(2, 1), Array(3, 2), Array(4, 2), Array(5, 2)), TrailingMinusNumbers:=True
+End Sub

@@ -1,0 +1,21 @@
+Sub Delete_all_sheets()
+'
+' Split_macro Macro
+' Macro created on 07/01/2010 by Marius Chioran
+'
+' Description: The macro delets all sheets except the main sheet (the firts one)
+'
+
+    Dim i, j As Integer
+    
+    j = Sheets.Count                    ' Count sheets
+    
+    Application.DisplayAlerts = False   ' Do not show delete confirmation dialog
+    For i = 0 To j - 2
+        Sheets(j - i).Delete            ' Delete last sheet
+    Next i
+    Application.DisplayAlerts = True    ' Show delete confirmation dialog
+
+    MsgBox "DONE! Sheets deleted!"
+    
+End Sub

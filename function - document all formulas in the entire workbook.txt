@@ -1,0 +1,14 @@
+Sub docFormulasWkb()
+Dim rng As Range
+Dim wks As Worksheet
+For Each wks In ActiveWorkbook.Worksheets
+For Each rng In wks.UsedRange
+If rng.HasFormula = True Then
+Debug.Print "Sheet:" & wks.Name
+Debug.Print "Address:"&rng.Address
+Debug.Print "Formula:"&rng.Formula
+Debug.Print "Value:" & rng.Value
+End If
+Next rng
+Next wks
+End Sub

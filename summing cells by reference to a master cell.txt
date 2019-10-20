@@ -1,0 +1,53 @@
+Public Function SUMCELLSBYREF(cells_to_sum As Object, r As Object, p As String)
+Application.Volatile
+Total = 0
+For Each Cell In cells_to_sum
+
+    If p = "bold" And Cell.Font.Bold = r.Font.Bold Then
+    Total = Total + Cell.Value
+    
+    End If
+    
+    If p = "color" And Cell.Font.Color = r.Font.Color Then
+    Total = Total + Cell.Value
+    
+    End If
+    
+    If p = "italic" And Cell.Font.Italic = r.Font.Italic Then
+    Total = Total + Cell.Value
+    
+    End If
+    
+    If p = "name" And Cell.Font.Name = r.Font.Name Then
+    Total = Total + Cell.Value
+    
+    End If
+    
+    If p = "size" And Cell.Font.Size = r.Font.Size Then
+    Total = Total + Cell.Value
+    
+    End If
+    
+    If p = "underline" And Cell.Font.Underline = r.Font.Underline Then
+    Total = Total + Cell.Value
+    
+    End If
+     
+     
+    If p = "subscript" And Cell.Font.Subscript = r.Font.Subscript Then
+    Total = Total + Cell.Value
+     
+    End If
+    
+    If p = "superscript" And Cell.Font.Superscript = r.Font.Superscript Then
+    
+    Total = Total + Cell.Value
+    
+    End If
+    
+    Next Cell
+    SUMCELLSBYREF = Total
+    
+End Function
+
+

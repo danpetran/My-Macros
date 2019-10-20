@@ -1,0 +1,8 @@
+Sub OutputChart()
+
+Dim ExportFile As String
+ActiveSheet.ChartObjects(1).Activate
+ExportFile = ThisWorkbook.Path & "\" & ActiveChart.Name & ".gif"
+ActiveChart.Export Filename:=ExportFile, FilterName:="GIF"
+
+End Sub

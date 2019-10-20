@@ -1,0 +1,3 @@
+Function TabName()
+ TabName = ActiveSheet.Name
+End Function

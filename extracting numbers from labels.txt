@@ -1,0 +1,13 @@
+Function EVAL(cell_ref As Object)
+Application.Volatile
+t = ""
+For Each cell In cell_ref
+temp = cell.Value
+For n = 1 To Len(temp)
+If IsNumeric(Mid(temp, n, 1)) Then
+t = t & Mid(temp, n, 1)
+End If
+Next n
+Next cell
+EVAL = Val(t)
+End Function

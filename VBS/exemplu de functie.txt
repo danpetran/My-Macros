@@ -1,0 +1,36 @@
+Function VerifyItemUnique(strList, strToSearch01, strDelimiter)
+    Dim bResult
+    bResult = "Liquids"
+    'remove the text from a character to the beginning
+    strList = Mid(strList, InStr(strList, strDelimiter)+1)
+	arrItems = Split(strList, strDelimiter)
+    arrItemsToSearch = Split(strToSearch01, strDelimiter)
+    iCount = UBound(arrItems) + 1
+	iIncrement = 0
+	
+  For Each strItem In arrItems
+        If Trim(strItem) <> "" Then
+            If UCase(Trim(strItem)) = UCase(Trim(strToSearch01)) Then
+                bResult = "Solids"
+			iIncrement = iIncrement + 1
+            End If
+        End If
+    Next
+ If iIncrement = 0  Then 
+ bResult = "Liquids"
+ Else
+ If iIncrement = iCount Then
+        bResult = "Solids"
+    Else
+        bResult = "Combined"
+    End If
+End If	
+    VerifyItemUnique = bResult
+End Function
+
+MsgBox VerifyItemUnique("None|Powders", "Powders", "|")
+'MsgBox VerifyItemUnique("NONE|A|A|B|B", "A", "|")
+'MsgBox VerifyItemUnique("NONE|B", "A", "|")
+'MsgBox VerifyItemUnique("None|B|B|B", "A", "|")
+'MsgBox VerifyItemUnique("None|A|A|B", "A", "|")
+'MsgBox VerifyItemUnique("None|A|A", "A", "|")

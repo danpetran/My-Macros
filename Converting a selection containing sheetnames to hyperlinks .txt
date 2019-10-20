@@ -1,0 +1,7 @@
+Sub trevor001()
+  Dim Cell  As Range
+  For Each Cell In Selection
+  ActiveSheet.Hyperlinks.Add Anchor:=Cells(Cell.Row, Cell.Column), _
+            Address:="", SubAddress:="'" & Sheets(Cell.Value).Name & "'!A1"
+  Next Cell
+End Sub

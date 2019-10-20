@@ -1,0 +1,3 @@
+Function WkbPath()
+WkbPath = ActiveWorkbook.Path
+End Function

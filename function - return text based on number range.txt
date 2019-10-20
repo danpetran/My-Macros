@@ -1,0 +1,52 @@
+Option Explicit
+Function MyFunc(rCell As Range)
+
+   Dim sStr As String
+   If Not IsNumeric(rCell.Value) Then
+      MyFunc = "Invalid Input"
+      Exit Function
+   End If
+   
+   Select Case rCell.Value
+Case 1000 To 2199:
+    sStr = "Carlo Birchall;Martin Bronkhorst;Cor Hensen"
+Case 2200 To 2999:
+    sStr = "Eppo Jol;Martin Bronkhorst;Cor Hensen"
+Case 3000 To 3199:
+    sStr = "Peter Sachs;Jan Gerkema;Cor Hensen"
+Case 3200 To 3299:
+    sStr = "Arthur Kramer;Erwin van Os;Cor Hensen"
+Case 3300 To 3599:
+    sStr = "Peter Horbach;Jan Willem Dijkshoorn;Eddie Bosch"
+Case 3600 To 3699:
+    sStr = "Carlo Birchall;Martin Bronkhorst;Cor Hensen"
+Case 3700 To 4299:
+    sStr = "Peter Horbach;Jan Willem Dijkshoorn;Eddie Bosch"
+Case 4300 To 4750:
+    sStr = "Arthur Kramer;Erwin van Os;Cor Hensen"
+Case 4751 To 4799:
+    sStr = "Abdelali Baabbi;Ab de Groot;Eddie Bosch"
+Case 4800 To 4899:
+    sStr = "Arthur Kramer;Erwin van Os;Cor Hensen"
+Case 4900 To 6499:
+    sStr = "Abdelali Baabbi;Ab de Groot;Eddie Bosch"
+Case 6500 To 7799:
+    sStr = "Gerard Ensink;Ab de Groot;Eddie Bosch"
+Case 7800 To 7999:
+    sStr = "Ronald Hekman;Jan Willem Dijkshoorn;Eddie Bosch"
+Case 8000 To 8099:
+    sStr = "Peter Horbach;Jan Willem Dijkshoorn;Eddie Bosch"
+Case 8100 To 8199:
+    sStr = "Gerard Ensink;Ab de Groot;Eddie Bosch"
+Case 8200 To 8299:
+    sStr = "Peter Horbach;Jan Willem Dijkshoorn;Eddie Bosch"
+Case 8300 To 9999:
+    sStr = "Ronald Hekman;Jan Willem Dijkshoorn;Eddie Bosch"
+Case Else: sStr = "No Range found for Input"
+   End Select
+ MyFunc = sStr
+   
+  
+End Function
+
+

@@ -1,0 +1,14 @@
+Sub SortALLSheets()
+  'sort sheets within a workbook in Excel 7 -- Bill Manville
+  'modified to sort all sheets instead of just worksheets
+    Dim iSheet As Long, iBefore As Long
+  For iSheet = 1 To ActiveWorkbook.Sheets.Count
+    Sheets(iSheet).Visible = True
+    For iBefore = 1 To iSheet - 1
+      If UCase(Sheets(iBefore).Name) > UCase(Sheets(iSheet).Name) Then
+        ActiveWorkbook.Sheets(iSheet).Move Before:=ActiveWorkbook.Sheets(iBefore)
+        Exit For
+      End If
+    Next iBefore
+  Next iSheet
+End Sub

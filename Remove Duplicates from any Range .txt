@@ -1,0 +1,93 @@
+Sub KillDupes()
+
+Dim rConstRange As Range, rFormRange As Range
+
+Dim rAllRange As Range, rCell As Range
+
+Dim iCount As Long
+
+Dim strAdd As String
+
+
+
+	On Error Resume Next
+
+	Set rAllRange = Selection
+
+		If WorksheetFunction.CountA(rAllRange) < 2 Then
+
+			MsgBox "You selection is not valid", vbInformation
+
+      		On Error GoTo 0
+
+      		Exit Sub
+
+		End If
+
+
+
+
+
+	Set rConstRange = rAllRange.SpecialCells(xlCellTypeConstants)
+
+	Set rFormRange = rAllRange.SpecialCells(xlCellTypeFormulas)
+
+
+
+    If Not rConstRange Is Nothing And Not rFormRange Is Nothing Then
+
+		Set rAllRange = Union(rConstRange, rFormRange)
+
+    ElseIf Not rConstRange Is Nothing Then
+
+		Set rAllRange = rConstRange
+
+    ElseIf Not rFormRange Is Nothing Then
+
+		Set rAllRange = rFormRange
+
+    Else
+
+		MsgBox "You selection is not valid", vbInformation
+
+		On Error GoTo 0
+
+		Exit Sub
+
+    End If
+
+   
+
+	Application.Calculation = xlCalculationManual
+
+
+
+	For Each rCell In rAllRange
+
+		strAdd = rCell.Address
+
+		strAdd = rAllRange.Find(What:=rCell, After:=rCell, LookIn:=xlValues, _
+
+			LookAt:=xlWhole, SearchOrder:=xlByRows, SearchDirection:=xlNext, _
+
+			MatchCase:=False).Address
+
+          
+
+		If strAdd <> rCell.Address Then
+
+			rCell.Clear
+
+		End If
+
+	Next rCell
+
+
+
+  
+
+	Application.Calculation = xlCalculationAutomatic
+
+	On Error GoTo 0
+
+End Sub

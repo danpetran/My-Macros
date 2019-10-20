@@ -1,0 +1,15 @@
+Sub MergeFiles()
+Dim strFiles()
+Dim lOpen As Long
+Dim wbOpen As Workbook
+
+strFiles = Application.GetOpenFilename(MultiSelect:=True)
+
+    For lOpen = LBound(strFiles) To UBound(strFiles)
+        Set wbOpen = Workbooks.Open(strFiles(lOpen))
+        wbOpen.Sheets(1).Copy After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)
+        wbOpen.Close SaveChanges:=False
+
+    Next lOpen
+
+End Sub

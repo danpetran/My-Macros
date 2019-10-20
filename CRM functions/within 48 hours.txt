@@ -1,0 +1,5 @@
+(SUM(CASE WHEN 
+CASE WHEN DAYOFWEEK("Custom Object 2".DATE_0)>DAYOFWEEK("Custom Object 2".DATE_1)  
+THEN  CAST(TIMESTAMPDIFF(SQL_TSI_MINUTE,"Custom Object 2".DATE_0,"Custom Object 2".DATE_1)/60 as FLOAT)-48 
+ELSE  CAST(TIMESTAMPDIFF(SQL_TSI_MINUTE,"Custom Object 2".DATE_0,"Custom Object 2".DATE_1)/60 as FLOAT)END 
+between 24.001 and 48 THEN 1 ELSE 0 END)/"CustomObject5 Metrics"."# of CustomObject5s")

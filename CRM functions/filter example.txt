@@ -1,0 +1,12 @@
+FILTER(EMPLOYEE."EMPLOYEE NAME" USING ((Territory."Territory Name"='Central') AND ("Revenue Metrics"."Opportunity Revenue" >=100000)) OR ((Territory."Territory Name" = 'Central') AND ("Revenue Metrics".Opportunity Revenue" > 500000))))
+CASE 
+WHEN Account."Account State / Province" IN ('FL' , 'GA' , 'NC' , 'SC' , 'VA') THEN 'Eastern Accounts'
+WHEN Account."Account State / Province" IN ('AZ','CA','MO','NV','OR' , 'WA') THEN 'Western Accounts'
+WHEN Account."Account State / Province" IN ('DE' , 'KY' ,'MD' , 'DC' , 'NH' , 'PA') THEN 'Northeast Accounts'
+ELSE 'Central Accounts'
+END
+CASE 
+WHEN Account."Annual Revenue" <= 1000000 THEN 'Large Account'
+WHEN Account."Annual Revenue" < 100000 THEN 'Small Account'
+ELSE 'Medium Account'
+END  

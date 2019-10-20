@@ -1,0 +1,1402 @@
+Sub convert_task()
+  
+  Dim myOlApp As Application
+  Dim myNameSpace As NameSpace
+  Dim myFolder As MAPIFolder
+  Dim myItems As items
+  Dim myItem As Object
+    
+  Dim myOlExp As Outlook.Explorer
+  Dim myOlSel As Outlook.Selection
+    
+  formtype = InputBox("Please write the type of the form to which this item should be converted to:")
+    
+  CustomFormMC = "IPM.Task." & formtype
+    
+  Set myOlApp = CreateObject("Outlook.Application")
+  Set myNameSpace = myOlApp.GetNamespace("MAPI")
+      
+  Set myOlExp = myOlApp.ActiveExplorer
+  Set myOlSel = myOlExp.Selection
+  
+  For k = 1 To myOlSel.Count
+  
+    Set myItem = myOlSel.Item(k)
+  
+    If myItem.MessageClass <> CustomFormMC Then
+                myItem.MessageClass = CustomFormMC
+        '            MsgBox "Task-ul a fost convertit!"
+         '   Else: MsgBox "Task-ul este in format custom!"
+    End If
+  
+    myItem.Save
+  
+  Next
+  
+  MsgBox "Conversion complete!"
+  
+  Set myOlApp = Nothing
+  Set myNameSpace = Nothing
+  Set myFolder = Nothing
+  Set myItems = Nothing
+  Set myItem = Nothing
+
+End Sub
+
+Sub export_data()
+
+  Dim myOlApp As Application
+  Dim myNameSpace As NameSpace
+  Dim myFolder As MAPIFolder
+  Dim myItems As items
+  Dim myItem As Object
+    
+  Dim myOlExp As Outlook.Explorer
+  Dim myOlSel As Outlook.Selection
+    
+    
+  Set myOlApp = CreateObject("Outlook.Application")
+  Set myNameSpace = myOlApp.GetNamespace("MAPI")
+      
+  Set myOlExp = myOlApp.ActiveExplorer
+  Set myOlSel = myOlExp.Selection
+  
+  countryname = InputBox("Please type the name of the country (Belgium, UK, France, Spain, Italy, Germany, Poland, Netherlands, APEx):")
+  folder_path = "Z:\Application&Project Support Group\Valves\Documentation\Databases\" & countryname & " database\TasksFiles\" & countryname & "\"
+  
+  For k = 1 To myOlSel.Count
+  
+    Set myItem = myOlSel.Item(k)
+    
+    If k Mod 50 = 0 Then response = MsgBox("Task no: " & Str(k) & " out of " & Str(myOlSel.Count) & " is retrieved! " & "Task subject: " & myItem.Subject, vbOKCancel)
+    
+    If response = vbCancel Then Exit For
+    
+    Set fs = CreateObject("Scripting.FileSystemObject")
+    Set a = fs.CreateTextFile(folder_path & myItem.EntryID & ".txt", True)
+    
+    a.WriteLine (myItem.EntryID)
+    a.WriteLine (myItem.Subject)
+    a.WriteLine (myItem.StatusUpdateRecipients)
+    a.WriteLine (myItem.CreationTime)
+    a.WriteLine (myItem.StartDate)
+    a.WriteLine (myItem.DueDate)
+    a.WriteLine (myItem.PercentComplete)
+    a.WriteLine (myItem.Status)
+    a.WriteLine (myItem.DateCompleted)
+    a.WriteLine (myItem.Complete)
+    
+    If Not (myItem.UserProperties("txtOperatorNameField") Is Nothing) Then
+        a.WriteLine (myItem.UserProperties("txtOperatorNameField"))
+        Else: a.WriteLine ("")
+    End If
+        
+    If Not (myItem.UserProperties("CustomerField") Is Nothing) Then a.WriteLine (myItem.UserProperties("CustomerField"))
+    If Not (myItem.UserProperties("ComboBox1Field") Is Nothing) Then a.WriteLine (myItem.UserProperties("ComboBox1Field"))
+    If Not (myItem.UserProperties("DocLanguage") Is Nothing) Then a.WriteLine (myItem.UserProperties("DocLanguage"))
+    If Not (myItem.UserProperties("DocLanguage1") Is Nothing) Then a.WriteLine (myItem.UserProperties("DocLanguage1"))
+    If Not (myItem.UserProperties("IPOprefix") Is Nothing Or myItem.UserProperties("IPOcode1") Is Nothing) Then a.WriteLine (myItem.UserProperties("IPOprefix") & myItem.UserProperties("IPOcode1"))
+    If Not (myItem.UserProperties("LineItemsField") Is Nothing) Then a.WriteLine (myItem.UserProperties("LineItemsField"))
+                
+    If Not (myItem.UserProperties("AppRequiredField") Is Nothing) Then a.WriteLine (myItem.UserProperties("AppRequiredField"))
+    If Not (myItem.UserProperties("FrontSheetsRequiredField") Is Nothing) Then a.WriteLine (myItem.UserProperties("FrontSheetsRequiredField"))
+    If Not (myItem.UserProperties("ValveLinkRequiredField") Is Nothing) Then a.WriteLine (myItem.UserProperties("ValveLinkRequiredField"))
+    If Not (myItem.UserProperties("PrintsRequired") Is Nothing) Then a.WriteLine (myItem.UserProperties("PrintsRequired"))
+    If Not (myItem.UserProperties("NoPrintsRequiredField") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoPrintsRequiredField"))
+    If Not (myItem.UserProperties("CDRequiredField") Is Nothing) Then a.WriteLine (myItem.UserProperties("CDRequiredField"))
+    If Not (myItem.UserProperties("NoCDRequiredField") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoCDRequiredField"))
+                
+    If Not (myItem.UserProperties("ReqStatusWordField") Is Nothing) Then a.WriteLine (myItem.UserProperties("ReqStatusWordField"))
+    If Not (myItem.UserProperties("PrepStatusWordField") Is Nothing) Then a.WriteLine (myItem.UserProperties("PrepStatusWordField"))
+    If Not (myItem.UserProperties("SentStatusWordField") Is Nothing) Then a.WriteLine (myItem.UserProperties("SentStatusWordField"))
+    If Not (myItem.UserProperties("DoneStatusWordField") Is Nothing) Then a.WriteLine (myItem.UserProperties("DoneStatusWordField"))
+                        
+    If Not (myItem.UserProperties("SessionDurationSecField") Is Nothing) Then a.WriteLine (myItem.UserProperties("SessionDurationSecField"))
+                
+    If Not (myItem.UserProperties("CommentsField") Is Nothing) Then a.WriteLine (myItem.UserProperties("CommentsField"))
+    If Not (myItem.UserProperties("LastRecord") Is Nothing) Then a.WriteLine (myItem.UserProperties("LastRecord"))
+    If Not (myItem.UserProperties("ShippingCompany") Is Nothing) Then a.WriteLine (myItem.UserProperties("ShippingCompany"))
+    If Not (myItem.UserProperties("ShippingDate") Is Nothing) Then a.WriteLine (myItem.UserProperties("ShippingDate"))
+    If Not (myItem.UserProperties("AWBCode") Is Nothing) Then a.WriteLine (myItem.UserProperties("AWBCode"))
+    If Not (myItem.UserProperties("NoBinders") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoBinders"))
+    If Not (myItem.UserProperties("NoFolders") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoFolders"))
+    If Not (myItem.UserProperties("NoBoxes") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoBoxes"))
+    If Not (myItem.UserProperties("NoBlueSeparators") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoBlueSeparators"))
+    If Not (myItem.UserProperties("NoNoSeparators") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoNoSeparators"))
+    If Not (myItem.UserProperties("NoBubbleFoil") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoBubbleFoil"))
+    If Not (myItem.UserProperties("NoCDEnv") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoCDEnv"))
+    If Not (myItem.UserProperties("NoCDPlasticEnv") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoCDPlasticEnv"))
+    If Not (myItem.UserProperties("NoCDBoxes") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoCDBoxes"))
+    If Not (myItem.UserProperties("NoXLEnv") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoXLEnv"))
+                
+    If Not (myItem.UserProperties("NoPDFPages") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoPDFPages"))
+    If Not (myItem.UserProperties("NoPrintPages") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoPrintPages"))
+    
+    a.Close
+    Set fs = Nothing
+    
+  Next k
+    
+  Set myOlApp = Nothing
+  Set myNameSpace = Nothing
+  Set myFolder = Nothing
+  Set myItems = Nothing
+  Set myItem = Nothing
+
+End Sub
+Sub export_data_appregs()
+
+  Dim myOlApp As Application
+  Dim myNameSpace As NameSpace
+  Dim myFolder As MAPIFolder
+  Dim myItems As items
+  Dim myItem As Object
+  Dim myOlExp As Outlook.Explorer
+  Dim myOlSel As Outlook.Selection
+  
+  Set myOlApp = CreateObject("Outlook.Application")
+  Set myNameSpace = myOlApp.GetNamespace("MAPI")
+  Set myOlExp = myOlApp.ActiveExplorer
+  Set myOlSel = myOlExp.Selection
+
+  countryname = "" 'InputBox("Please type the name of the country:")
+  folder_path = "z:\Application&Project Support Group\Regulators\APPLICATION\REGS database\Outlook database\TasksFiles\"
+  
+  For k = 1 To myOlSel.Count
+    
+    Set myItem = myOlSel.Item(k)
+
+    If k Mod 50 = 0 Then response = MsgBox("Task no: " & Str(k) & " out of " & Str(myOlSel.Count) & " is retrieved! " & "Task subject: " & myItem.Subject, vbOKCancel)
+
+    If response = vbCancel Then Exit For
+
+    Set fs = CreateObject("Scripting.FileSystemObject")
+    Set a = fs.CreateTextFile(folder_path & myItem.EntryID & ".txt", True)
+
+    a.WriteLine (myItem.EntryID)
+    a.WriteLine (myItem.Subject)
+    If Not (myItem.UserProperties("AssignedBy") Is Nothing) Then a.WriteLine (myItem.UserProperties("AssignedBy"))
+    a.WriteLine (myItem.CreationTime)
+    a.WriteLine (myItem.StartDate)
+    a.WriteLine (myItem.DueDate)
+    a.WriteLine (myItem.PercentComplete)
+    a.WriteLine (myItem.Status)
+    a.WriteLine (myItem.DateCompleted)
+    a.WriteLine (myItem.Complete)
+ 
+
+        If Not (myItem.UserProperties("OperatorNameField") Is Nothing) Then a.WriteLine (myItem.UserProperties("OperatorNameField"))
+        If Not (myItem.UserProperties("CustomerField") Is Nothing) Then a.WriteLine (myItem.UserProperties("CustomerField"))
+        If Not (myItem.UserProperties("EndUser") Is Nothing) Then a.WriteLine (myItem.UserProperties("EndUser"))
+        If Not (myItem.UserProperties("EndDestination") Is Nothing) Then a.WriteLine (myItem.UserProperties("EndDestination"))
+        If Not (myItem.UserProperties("EndApplication") Is Nothing) Then a.WriteLine (myItem.UserProperties("EndApplication"))
+        If Not (myItem.UserProperties("StatusOfQuotation") Is Nothing) Then a.WriteLine (myItem.UserProperties("StatusOfQuotation"))
+        If Not (myItem.UserProperties("CountryField") Is Nothing) Then a.WriteLine (myItem.UserProperties("CountryField"))
+        If Not (myItem.UserProperties("InitialSubjectField") Is Nothing) Then a.WriteLine (myItem.UserProperties("InitialSubjectField"))
+        If Not (myItem.UserProperties("ReasonForOverdueField") Is Nothing) Then a.WriteLine (myItem.UserProperties("ReasonForOverdueField"))
+
+        If Not (myItem.UserProperties("MROSelected") Is Nothing) Then a.WriteLine (myItem.UserProperties("MROSelected"))
+        If Not (myItem.UserProperties("LineItems") Is Nothing) Then a.WriteLine (myItem.UserProperties("LineItems"))
+        If Not (myItem.UserProperties("NoItems") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoItems"))
+        If Not (myItem.UserProperties("TotalValue") Is Nothing) Then a.WriteLine (myItem.UserProperties("TotalValue"))
+        If Not (myItem.UserProperties("IQNoField") Is Nothing) Then a.WriteLine (myItem.UserProperties("IQNoField"))
+        If Not (myItem.UserProperties("FFirstCodeField") Is Nothing) Then a.WriteLine (myItem.UserProperties("FFirstCodeField"))
+        If Not (myItem.UserProperties("FFNSelectedFIeld") Is Nothing) Then a.WriteLine (myItem.UserProperties("FFNSelectedFIeld"))
+
+        If Not (myItem.UserProperties("txtRevisionNoField") Is Nothing) Then a.WriteLine (myItem.UserProperties("txtRevisionNoField"))
+        If Not (myItem.UserProperties("cmbCauseForRevision") Is Nothing) Then a.WriteLine (myItem.UserProperties("cmbCauseForRevision"))
+        If Not (myItem.UserProperties("UnsolvedField") Is Nothing) Then a.WriteLine (myItem.UserProperties("UnsolvedField"))
+        If Not (myItem.UserProperties("txtReasonForUnsolved") Is Nothing) Then a.WriteLine (myItem.UserProperties("txtReasonForUnsolved"))
+
+        If Not (myItem.UserProperties("ReqStatusWordField") Is Nothing) Then a.WriteLine (myItem.UserProperties("ReqStatusWordField"))
+        If Not (myItem.UserProperties("DoneStatusWordField") Is Nothing) Then a.WriteLine (myItem.UserProperties("DoneStatusWordField"))
+
+        If Not (myItem.UserProperties("TaskDurationField") Is Nothing) Then a.WriteLine (myItem.UserProperties("TaskDurationField"))
+        If Not (myItem.UserProperties("LastComments") Is Nothing) Then a.WriteLine (myItem.UserProperties("LastComments"))
+
+
+    a.Close
+
+    Set fs = Nothing
+
+  Next k
+
+  Set myOlApp = Nothing
+  Set myNameSpace = Nothing
+  Set myFolder = Nothing
+  Set myItems = Nothing
+  Set myItem = Nothing
+
+End Sub
+Sub save_task()
+
+Dim myOlApp As Application
+Dim myNameSpace As NameSpace
+Dim myFolder As MAPIFolder
+Dim myItems As items
+Dim myItem As Object
+
+Dim myOlExp As Outlook.Explorer
+Dim myOlSel As Outlook.Selection
+
+Dim sendersubjectstring As String
+
+Set myOlApp = CreateObject("Outlook.Application")
+Set myNameSpace = myOlApp.GetNamespace("MAPI")
+Set myOlExp = myOlApp.ActiveExplorer
+Set myOlSel = myOlExp.Selection
+
+folder_path = "Z:\Application&Project Support Group\Regulators\APPLICATION\REGS database\Archives\"
+
+For k = 1 To myOlSel.Count
+
+    Set myItem = myOlSel.Item(k)
+    
+    If k Mod 50 = 0 Then response = MsgBox("Task no: " & Str(k) & " out of " & Str(myOlSel.Count) & " is saved! " & "Task subject: " & myItem.Subject, vbOKCancel)
+    
+    If response = vbCancel Then Exit For
+        
+    If myItem.StatusUpdateRecipients <> "" Then
+              sendersubjectstring = CStr(myItem.StatusUpdateRecipients) & CStr(myItem.Subject)
+        Else: sendersubjectstring = CStr(myItem.Subject)
+    End If
+    
+    For i = 1 To Len(sendersubjectstring)
+    
+    If Not ((Mid(sendersubjectstring, i, 1) >= "a" And Mid(sendersubjectstring, i, 1) <= "z") Or _
+            (Mid(sendersubjectstring, i, 1) >= "A" And Mid(sendersubjectstring, i, 1) <= "Z") Or _
+            (Mid(sendersubjectstring, i, 1) >= "0" And Mid(sendersubjectstring, i, 1) <= "9")) Then
+        
+        Mid(sendersubjectstring, i, 1) = "_"
+
+    End If
+   
+    Next i
+    
+    messageName = CStr(Year(myItem.CreationTime)) & " " & CStr(Month(myItem.CreationTime)) & " " & Day(CStr(myItem.CreationTime)) & " " & sendersubjectstring
+    messageName = messageName & " " & CStr(myItem.EntryID)
+    myItem.SaveAs folder_path & messageName & ".msg", olMSG
+  
+  Next k
+
+  MsgBox "Saving complete! " & CStr(myOlSel.Count) & " items have been saved!"
+  
+  Set myOlApp = Nothing
+  Set myNameSpace = Nothing
+  Set myFolder = Nothing
+  Set myItems = Nothing
+  Set myItem = Nothing
+
+End Sub
+Sub export_data_UKDocs()
+
+Dim myOlApp As Application
+  Dim myNameSpace As NameSpace
+  Dim myFolder As MAPIFolder
+  Dim myItems As items
+  Dim myItem As Object
+    
+  Dim myOlExp As Outlook.Explorer
+  Dim myOlSel As Outlook.Selection
+    
+    
+  Set myOlApp = CreateObject("Outlook.Application")
+  Set myNameSpace = myOlApp.GetNamespace("MAPI")
+      
+  Set myOlExp = myOlApp.ActiveExplorer
+  Set myOlSel = myOlExp.Selection
+  
+  folderoptionname = InputBox("Please type the option you wish (MRO or Project):")
+  folder_path = "Z:\Application&Project Support Group\UK team\Documentation\" & folderoptionname & "\Database\TasksFiles\"
+  
+  For k = 1 To myOlSel.Count
+  
+    Set myItem = myOlSel.Item(k)
+    
+    If k Mod 50 = 0 Then response = MsgBox("Task no: " & Str(k) & " out of " & Str(myOlSel.Count) & " is retrieved! " & "Task subject: " & myItem.Subject, vbOKCancel)
+    
+    If response = vbCancel Then Exit For
+    
+    Set fs = CreateObject("Scripting.FileSystemObject")
+    Set a = fs.CreateTextFile(folder_path & myItem.EntryID & ".txt", True)
+    
+    a.WriteLine (myItem.EntryID)
+    a.WriteLine (Left(myItem.Subject, 250))
+    a.WriteLine (myItem.StatusUpdateRecipients)
+    a.WriteLine (myItem.CreationTime)
+    a.WriteLine (myItem.StartDate)
+    a.WriteLine (myItem.DueDate)
+    a.WriteLine (myItem.PercentComplete)
+    a.WriteLine (myItem.Status)
+    a.WriteLine (myItem.DateCompleted)
+    a.WriteLine (myItem.Complete)
+    a.WriteLine (Left(myItem.Mileage, 250))
+    a.WriteLine (Left(myItem.BillingInformation, 250))
+    
+    If Not (myItem.UserProperties("cmbCountryField") Is Nothing) Then a.WriteLine (myItem.UserProperties("cmbCountryField"))
+    If Not (myItem.UserProperties("txtProjectNameField") Is Nothing) Then a.WriteLine (myItem.UserProperties("txtProjectNameField"))
+    If Not (myItem.UserProperties("txtLineItemsField") Is Nothing) Then a.WriteLine (myItem.UserProperties("txtLineItemsField"))
+    If Not (myItem.UserProperties("cmbDivisionField") Is Nothing) Then a.WriteLine (myItem.UserProperties("cmbDivisionField"))
+    If Not (myItem.UserProperties("txtCustomerField") Is Nothing) Then a.WriteLine (myItem.UserProperties("txtCustomerField"))
+    If Not (myItem.UserProperties("optMROProjectField") Is Nothing) Then a.WriteLine (myItem.UserProperties("optMROProjectField"))
+    If Not (myItem.UserProperties("txtPOnoField") Is Nothing) Then a.WriteLine (myItem.UserProperties("txtPOnoField"))
+    If Not (myItem.UserProperties("txtIseContactField") Is Nothing) Then a.WriteLine (myItem.UserProperties("txtIseContactField"))
+    If Not (myItem.UserProperties("cmbRoDocContactField") Is Nothing) Then a.WriteLine (myItem.UserProperties("cmbRoDocContactField"))
+    If Not (myItem.UserProperties("txtCsaContactField") Is Nothing) Then a.WriteLine (myItem.UserProperties("txtCsaContactField"))
+    If Not (myItem.UserProperties("txtStatusField") Is Nothing) Then a.WriteLine (myItem.UserProperties("txtStatusField"))
+    If Not (myItem.UserProperties("cmbUKDocCOntactField") Is Nothing) Then a.WriteLine (myItem.UserProperties("cmbUKDocCOntactField"))
+    If Not (myItem.UserProperties("txtPODateField") Is Nothing) Then a.WriteLine (myItem.UserProperties("txtPODateField"))
+    If Not (myItem.UserProperties("DocLanguage") Is Nothing) Then a.WriteLine (myItem.UserProperties("DocLanguage"))
+    If Not (myItem.UserProperties("DocLanguage1") Is Nothing) Then a.WriteLine (myItem.UserProperties("DocLanguage1"))
+                
+    If Not (myItem.UserProperties("cmbPrefixIpoField") Is Nothing Or myItem.UserProperties("txtQuoteNoField") Is Nothing) Then a.WriteLine (myItem.UserProperties("cmbPrefixIpoField") & myItem.UserProperties("txtQuoteNoField"))
+    If Not (myItem.UserProperties("cmbRefPrefixField") Is Nothing Or myItem.UserProperties("txtRefField") Is Nothing) Then a.WriteLine (myItem.UserProperties("cmbRefPrefixField") & myItem.UserProperties("txtRefField"))
+        
+    If Not (myItem.UserProperties("txtShippingCompanyField") Is Nothing) Then a.WriteLine (myItem.UserProperties("txtShippingCompanyField"))
+    If Not (myItem.UserProperties("txtAWBCodeField") Is Nothing) Then a.WriteLine (myItem.UserProperties("txtAWBCodeField"))
+    If Not (myItem.UserProperties("txtShippingDateField") Is Nothing) Then a.WriteLine (myItem.UserProperties("txtShippingDateField"))
+    
+    
+    CommentsFieldValue = myItem.UserProperties("CommentsField")
+    
+    For i = 1 To Len(CommentsFieldValue)
+    
+    If Not ((Mid(CommentsFieldValue, i, 1) >= "a" And Mid(CommentsFieldValue, i, 1) <= "z") Or _
+            (Mid(CommentsFieldValue, i, 1) >= "A" And Mid(CommentsFieldValue, i, 1) <= "Z") Or _
+            (Mid(CommentsFieldValue, i, 1) >= "0" And Mid(CommentsFieldValue, i, 1) <= "9")) Then
+        
+        CommentsFieldValue = Left(CommentsFieldValue, i - 1) + " " + Right(CommentsFieldValue, Len(CommentsFieldValue) - i)
+
+    End If
+   
+    Next i
+    
+    If Not (myItem.UserProperties("CommentsField") Is Nothing) Then a.WriteLine (CommentsFieldValue)
+    
+    
+    If Not (myItem.UserProperties("AppRequiredField") Is Nothing) Then a.WriteLine (myItem.UserProperties("AppRequiredField"))
+    If Not (myItem.UserProperties("FrontSheetsRequiredField") Is Nothing) Then a.WriteLine (myItem.UserProperties("FrontSheetsRequiredField"))
+    If Not (myItem.UserProperties("PrintsRequired") Is Nothing) Then a.WriteLine (myItem.UserProperties("PrintsRequired"))
+    If Not (myItem.UserProperties("NoPrintsRequiredField") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoPrintsRequiredField"))
+    If Not (myItem.UserProperties("CDRequiredField") Is Nothing) Then a.WriteLine (myItem.UserProperties("CDRequiredField"))
+    If Not (myItem.UserProperties("NoCDRequiredField") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoCDRequiredField"))
+    
+    If Not (myItem.UserProperties("NoPDFPages") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoPDFPages"))
+    If Not (myItem.UserProperties("NoPrintPages") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoPrintPages"))
+    
+    If Not (myItem.UserProperties("Next Due Date") Is Nothing) Then a.WriteLine (myItem.UserProperties("Next Due Date"))
+    
+    If Not (myItem.UserProperties("NoBinders") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoBinders"))
+    If Not (myItem.UserProperties("NoFolders") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoFolders"))
+    If Not (myItem.UserProperties("NoBoxes") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoBoxes"))
+    If Not (myItem.UserProperties("NoBlueSeparators") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoBlueSeparators"))
+    If Not (myItem.UserProperties("NoNoSeparators") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoNoSeparators"))
+    If Not (myItem.UserProperties("NoBubbleFoil") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoBubbleFoil"))
+    If Not (myItem.UserProperties("NoCDEnv") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoCDEnv"))
+    If Not (myItem.UserProperties("NoCDPlasticEnv") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoCDPlasticEnv"))
+    If Not (myItem.UserProperties("NoCDBoxes") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoCDBoxes"))
+    If Not (myItem.UserProperties("NoXLEnv") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoXLEnv"))
+    
+    
+    LastRecordValue = myItem.UserProperties("LastRecord")
+    
+    For i = 1 To Len(LastRecordValue)
+    
+    If Not ((Mid(LastRecordValue, i, 1) >= "a" And Mid(LastRecordValue, i, 1) <= "z") Or _
+            (Mid(LastRecordValue, i, 1) >= "A" And Mid(LastRecordValue, i, 1) <= "Z") Or _
+            (Mid(LastRecordValue, i, 1) >= "0" And Mid(LastRecordValue, i, 1) <= "9")) Then
+        
+        LastRecordValue = Left(LastRecordValue, i - 1) + " " + Right(LastRecordValue, Len(LastRecordValue) - i)
+
+    End If
+   
+    Next i
+    
+    If Not (myItem.UserProperties("LastRecord") Is Nothing) Then a.WriteLine (LastRecordValue)
+    
+    
+    If Not (myItem.UserProperties("ReqStatusWordField") Is Nothing) Then a.WriteLine (myItem.UserProperties("ReqStatusWordField"))
+    If Not (myItem.UserProperties("PrepStatusWordField") Is Nothing) Then a.WriteLine (myItem.UserProperties("PrepStatusWordField"))
+    If Not (myItem.UserProperties("SentStatusWordField") Is Nothing) Then a.WriteLine (myItem.UserProperties("SentStatusWordField"))
+    If Not (myItem.UserProperties("DoneStatusWordField") Is Nothing) Then a.WriteLine (myItem.UserProperties("DoneStatusWordField"))
+    If Not (myItem.UserProperties("CompStatusWordField") Is Nothing) Then a.WriteLine (myItem.UserProperties("CompStatusWordField"))
+    
+    If Not (myItem.UserProperties("SessionDurationSecField") Is Nothing) Then a.WriteLine (myItem.UserProperties("SessionDurationSecField"))
+    
+    If Not (myItem.UserProperties("OperatorLogField") Is Nothing) Then
+            
+            field_index = 1
+            no_of_chr10 = 6
+            
+            Do While (field_index <= Len(myItem.UserProperties("OperatorLogField"))) And (no_of_chr10 > 0)
+            
+                If Mid(myItem.UserProperties("OperatorLogField"), field_index, 1) = Chr(10) Then no_of_chr10 = no_of_chr10 - 1
+            
+            field_index = field_index + 1
+            
+            Loop
+            
+            i = field_index
+            lastaccessDate = ""
+            
+            Do While i < Len(myItem.UserProperties("OperatorLogField")) And Mid(myItem.UserProperties("OperatorLogField"), i, 1) <> " "
+            lastaccessDate = lastaccessDate + Mid(myItem.UserProperties("OperatorLogField"), i, 1)
+            i = i + 1
+            Loop
+            
+            If no_of_chr10 = 0 Then a.WriteLine (lastaccessDate)
+            If no_of_chr10 <> 0 Then a.WriteLine (Chr(10))
+    End If
+    
+    a.Close
+    Set fs = Nothing
+    
+  Next k
+    
+  Set myOlApp = Nothing
+  Set myNameSpace = Nothing
+  Set myFolder = Nothing
+  Set myItems = Nothing
+  Set myItem = Nothing
+
+End Sub
+Sub export_data_UKExpediter()
+
+  Dim myOlApp As Application
+  Dim myNameSpace As NameSpace
+  Dim myFolder As MAPIFolder
+  Dim myItems As items
+  Dim myItem As Object
+    
+  Dim myOlExp As Outlook.Explorer
+  Dim myOlSel As Outlook.Selection
+    
+    
+  Set myOlApp = CreateObject("Outlook.Application")
+  Set myNameSpace = myOlApp.GetNamespace("MAPI")
+      
+  Set myOlExp = myOlApp.ActiveExplorer
+  Set myOlSel = myOlExp.Selection
+  
+  operatorname = InputBox("Please type the name of the user (Alex, Remina, Adriana, Kit):")
+  folder_path = "Z:\Application&Project Support Group\UK team\Expediting\Database\TasksFiles\" & operatorname & "\"
+    
+  For k = 1 To myOlSel.Count
+  
+    Set myItem = myOlSel.Item(k)
+    
+    If k Mod 50 = 0 Then response = MsgBox("Task no: " & Str(k) & " out of " & Str(myOlSel.Count) & " is retrieved! " & "Task subject: " & myItem.Subject, vbOKCancel)
+    
+    If response = vbCancel Then Exit For
+    
+    Set fs = CreateObject("Scripting.FileSystemObject")
+    Set a = fs.CreateTextFile(folder_path & myItem.EntryID & ".txt", True)
+    
+    a.WriteLine (myItem.EntryID)
+    
+    sendersubjectstring = myItem.Subject
+    For i = 1 To Len(sendersubjectstring)
+    
+        If Not ((Mid(sendersubjectstring, i, 1) >= "a" And Mid(sendersubjectstring, i, 1) <= "z") Or _
+            (Mid(sendersubjectstring, i, 1) >= "A" And Mid(sendersubjectstring, i, 1) <= "Z") Or _
+            (Mid(sendersubjectstring, i, 1) >= "0" And Mid(sendersubjectstring, i, 1) <= "9")) Then
+        
+            Mid(sendersubjectstring, i, 1) = "_"
+
+        End If
+    Next i
+    
+    a.WriteLine (Left(sendersubjectstring, 250))
+    
+    a.WriteLine (myItem.StatusUpdateRecipients)
+    a.WriteLine (myItem.CreationTime)
+    a.WriteLine (myItem.StartDate)
+    a.WriteLine (myItem.DueDate)
+    a.WriteLine (myItem.PercentComplete)
+    a.WriteLine (myItem.Status)
+    a.WriteLine (myItem.DateCompleted)
+    a.WriteLine (myItem.Complete)
+    
+    'If Not (myItem.UserProperties("OperatorNameField") Is Nothing) Then a.WriteLine (myItem.UserProperties("OperatorNameField"))
+    'If Not (myItem.UserProperties("CustomerField") Is Nothing) Then a.WriteLine (myItem.UserProperties("CustomerField"))
+    'If Not (myItem.UserProperties("EndUser") Is Nothing) Then a.WriteLine (myItem.UserProperties("EndUser"))
+    'If Not (myItem.UserProperties("EndDestination") Is Nothing) Then a.WriteLine (myItem.UserProperties("EndDestination"))
+    'If Not (myItem.UserProperties("EndApplication") Is Nothing) Then a.WriteLine (myItem.UserProperties("EndApplication"))
+    'If Not (myItem.UserProperties("StatusOfQuotation") Is Nothing) Then a.WriteLine (myItem.UserProperties("StatusOfQuotation"))
+                
+    'If Not (myItem.UserProperties("MROSelected") Is Nothing) Then a.WriteLine (myItem.UserProperties("MROSelected"))
+    'If Not (myItem.UserProperties("LineItems") Is Nothing) Then a.WriteLine (myItem.UserProperties("LineItems"))
+    'If Not (myItem.UserProperties("NoItems") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoItems"))
+    'If Not (myItem.UserProperties("TotalValue") Is Nothing) Then a.WriteLine (myItem.UserProperties("TotalValue"))
+    'If Not (myItem.UserProperties("IQNoField") Is Nothing) Then a.WriteLine (myItem.UserProperties("IQNoField"))
+    'If Not (myItem.UserProperties("FFirstCodeField") Is Nothing) Then a.WriteLine (myItem.UserProperties("FFirstCodeField"))
+    'If Not (myItem.UserProperties("FFNSelectedFIeld") Is Nothing) Then a.WriteLine (myItem.UserProperties("FFNSelectedFIeld"))
+                
+    'If Not (myItem.UserProperties("ReqStatusWordField") Is Nothing) Then a.WriteLine (myItem.UserProperties("ReqStatusWordField"))
+    'If Not (myItem.UserProperties("DoneStatusWordField") Is Nothing) Then a.WriteLine (myItem.UserProperties("DoneStatusWordField"))
+                        
+    'If Not (myItem.UserProperties("TaskDurationField") Is Nothing) Then a.WriteLine (myItem.UserProperties("TaskDurationField"))
+    
+    'If Not (myItem.UserProperties("LastComments") Is Nothing) Then a.WriteLine (myItem.UserProperties("LastComments"))
+    
+    a.Close
+    Set fs = Nothing
+    
+  Next k
+    
+  Set myOlApp = Nothing
+  Set myNameSpace = Nothing
+  Set myFolder = Nothing
+  Set myItems = Nothing
+  Set myItem = Nothing
+
+End Sub
+Sub export_data_appvalves()
+
+  Dim myOlApp As Application
+  Dim myNameSpace As NameSpace
+  Dim myFolder As MAPIFolder
+  Dim myItems As items
+  Dim myItem As Object
+  Dim myOlExp As Outlook.Explorer
+  Dim myOlSel As Outlook.Selection
+  
+  Set myOlApp = CreateObject("Outlook.Application")
+  Set myNameSpace = myOlApp.GetNamespace("MAPI")
+  Set myOlExp = myOlApp.ActiveExplorer
+  Set myOlSel = myOlExp.Selection
+
+  countryname = InputBox("Please type the name of the country (Romania, Bulgaria, Greece, Hungary, Slovenia, Croatia, Serbia):")
+  folder_path = "Z:\Application&Project Support Group\Valves\Application\Valves database\Outlook databases\TasksFiles" & countryname & "\"
+  
+  For k = 1 To myOlSel.Count
+    
+    Set myItem = myOlSel.Item(k)
+
+    If k Mod 50 = 0 Then response = MsgBox("Task no: " & Str(k) & " out of " & Str(myOlSel.Count) & " is retrieved! " & "Task subject: " & myItem.Subject, vbOKCancel)
+
+    If response = vbCancel Then Exit For
+
+    Set fs = CreateObject("Scripting.FileSystemObject")
+    Set a = fs.CreateTextFile(folder_path & myItem.EntryID & ".txt", True)
+
+    a.WriteLine (myItem.EntryID)
+    a.WriteLine (myItem.Subject)
+    a.WriteLine (myItem.StatusUpdateRecipients)
+    a.WriteLine (myItem.CreationTime)
+    a.WriteLine (myItem.StartDate)
+    a.WriteLine (myItem.DueDate)
+    a.WriteLine (myItem.PercentComplete)
+    a.WriteLine (myItem.Status)
+    a.WriteLine (myItem.DateCompleted)
+    a.WriteLine (myItem.Complete)
+ 
+
+    If Not (myItem.UserProperties("OperatorNameField") Is Nothing) Then a.WriteLine (myItem.UserProperties("OperatorNameField"))
+    If Not (myItem.UserProperties("CustomerField") Is Nothing) Then a.WriteLine (myItem.UserProperties("CustomerField"))
+    If Not (myItem.UserProperties("EndUser") Is Nothing) Then a.WriteLine (myItem.UserProperties("EndUser"))
+    If Not (myItem.UserProperties("EndDestination") Is Nothing) Then a.WriteLine (myItem.UserProperties("EndDestination"))
+    If Not (myItem.UserProperties("EndApplication") Is Nothing) Then a.WriteLine (myItem.UserProperties("EndApplication"))
+    If Not (myItem.UserProperties("StatusOfQuotation") Is Nothing) Then a.WriteLine (myItem.UserProperties("StatusOfQuotation"))
+    If Not (myItem.UserProperties("RevisionNo") Is Nothing) Then a.WriteLine (myItem.UserProperties("RevisionNo"))
+    If Not (myItem.UserProperties("ReworkedField") Is Nothing) Then a.WriteLine (myItem.UserProperties("ReworkedField"))
+    If Not (myItem.UserProperties("ReasonForRework") Is Nothing) Then a.WriteLine (myItem.UserProperties("ReasonForRework"))
+
+    If Not (myItem.UserProperties("MROSelected") Is Nothing) Then a.WriteLine (myItem.UserProperties("MROSelected"))
+    If Not (myItem.UserProperties("LineItems") Is Nothing) Then a.WriteLine (myItem.UserProperties("LineItems"))
+    If Not (myItem.UserProperties("NoItems") Is Nothing) Then a.WriteLine (myItem.UserProperties("NoItems"))
+    If Not (myItem.UserProperties("TotalValue") Is Nothing) Then a.WriteLine (myItem.UserProperties("TotalValue"))
+    If Not (myItem.UserProperties("IQNoField") Is Nothing) Then a.WriteLine (myItem.UserProperties("IQNoField"))
+    If Not (myItem.UserProperties("FFirstCodeField") Is Nothing) Then a.WriteLine (myItem.UserProperties("FFirstCodeField"))
+    If Not (myItem.UserProperties("FFNSelectedFIeld") Is Nothing) Then a.WriteLine (myItem.UserProperties("FFNSelectedFIeld"))
+
+    If Not (myItem.UserProperties("ReqStatusWordField") Is Nothing) Then a.WriteLine (myItem.UserProperties("ReqStatusWordField"))
+    If Not (myItem.UserProperties("DoneStatusWordField") Is Nothing) Then a.WriteLine (myItem.UserProperties("DoneStatusWordField"))
+
+    If Not (myItem.UserProperties("TaskDurationField") Is Nothing) Then a.WriteLine (myItem.UserProperties("TaskDurationField"))
+    If Not (myItem.UserProperties("LastComments") Is Nothing) Then a.WriteLine (myItem.UserProperties("LastComments"))
+
+    a.Close
+
+    Set fs = Nothing
+
+  Next k
+
+  Set myOlApp = Nothing
+  Set myNameSpace = Nothing
+  Set myFolder = Nothing
+  Set myItems = Nothing
+  Set myItem = Nothing
+
+End Sub
+Sub extract_dates()
+
+  Dim myOlApp As Application
+  Dim myNameSpace As NameSpace
+  Dim myFolder As MAPIFolder
+  Dim myItems As items
+  Dim myItem As Object
+  Dim myOlExp As Outlook.Explorer
+  Dim myOlSel As Outlook.Selection
+    
+  Set myOlApp = CreateObject("Outlook.Application")
+  Set myNameSpace = myOlApp.GetNamespace("MAPI")
+  Set myOlExp = myOlApp.ActiveExplorer
+  Set myOlSel = myOlExp.Selection
+
+  countryname = InputBox("Please type the name of the country (MRO or Project):")
+  folder_path = "D:\temporar\" & countryname & "\"
+  
+  Dim k As Long
+  
+  For k = 1 To myOlSel.Count
+    
+    Set myItem = myOlSel.Item(k)
+
+    If k Mod 50 = 0 Then response = MsgBox("Task no: " & Str(k) & " out of " & Str(myOlSel.Count) & " is retrieved! " & "Task subject: " & myItem.Subject, vbOKCancel)
+
+    If response = vbCancel Then Exit For
+
+    Set fs = CreateObject("Scripting.FileSystemObject")
+    Set a = fs.CreateTextFile(folder_path & myItem.EntryID & ".txt", True)
+
+    a.WriteLine (myItem.EntryID)
+    a.WriteLine (myItem.Subject)
+    a.WriteLine (myItem.CreationTime)
+    a.WriteLine (myItem.StartDate)
+    a.WriteLine (myItem.DueDate)
+    a.WriteLine (myItem.PercentComplete)
+    a.WriteLine (myItem.Status)
+    a.WriteLine (myItem.DateCompleted)
+    a.WriteLine (myItem.Complete)
+    
+    If Len(myItem.Body) > 0 Then a.WriteLine (Left(myItem.Body, 19))
+    If Len(myItem.Body) = 0 Then a.WriteLine ("None")
+    
+  Next k
+
+  Set myOlApp = Nothing
+  Set myNameSpace = Nothing
+  Set myFolder = Nothing
+  Set myItems = Nothing
+  Set myItem = Nothing
+
+End Sub
+
+Function GetFolder(ByVal FolderPath As String) As Outlook.Folder
+    Dim TestFolder As Outlook.Folder
+    Dim FoldersArray As Variant
+    Dim i As Integer
+        
+    On Error GoTo GetFolder_Error
+    If Left(FolderPath, 2) = "\\" Then
+        FolderPath = Right(FolderPath, Len(FolderPath) - 2)
+    End If
+    'Convert folderpath to array
+    FoldersArray = Split(FolderPath, "\")
+    Set TestFolder = Application.Session.Folders.Item(FoldersArray(0))
+    If Not TestFolder Is Nothing Then
+        For i = 1 To UBound(FoldersArray, 1)
+            Dim SubFolders As Outlook.Folders
+            Set SubFolders = TestFolder.Folders
+            Set TestFolder = SubFolders.Item(FoldersArray(i))
+            If TestFolder Is Nothing Then
+                Set GetFolder = Nothing
+            End If
+        Next
+    End If
+    'Return the TestFolder
+    Set GetFolder = TestFolder
+    Exit Function
+        
+GetFolder_Error:
+    Set GetFolder = Nothing
+    Exit Function
+End Function
+
+Sub SetFolderDefaultForm(fld As Outlook.Folder, _
+                         msgClass As String)
+    Dim objPA As Outlook.PropertyAccessor
+    Dim strBaseType As String
+    Dim strMsg As String
+    Dim intLoc As Integer
+    Dim blnBadForm As Boolean
+    Dim arrSchema()
+    Dim arrValues()
+    Dim arrErrors()
+    Dim i As Integer
+    Const PR_DEF_POST_MSGCLASS = _
+      "http://schemas.microsoft.com/mapi/proptag/0x36E5001E"
+    Const PR_DEF_POST_DISPLAYNAME = _
+      "http://schemas.microsoft.com/mapi/proptag/0x36E6001E"
+    On Error Resume Next
+    Select Case Left(UCase(msgClass), 8)
+        Case "IPM.NOTE" ' cannot be default for any folder
+            blnBadForm = True
+        Case "IPM.POST" ' default only for mail/post folders
+            If StrComp(fld.DefaultMessageClass, _
+                       "IPM.NOTE", vbTextCompare) <> 0 Then
+                blnBadForm = True
+            End If
+        Case Else
+            If InStr(1, msgClass, fld.DefaultMessageClass, _
+                     vbTextCompare) <> 1 Then
+                blnBadForm = True
+            End If
+    End Select
+    If Not blnBadForm Then
+        intLoc = InStrRev(msgClass, ".")
+        arrSchema = Array _
+          (PR_DEF_POST_MSGCLASS, PR_DEF_POST_DISPLAYNAME)
+        arrValues = _
+          Array(msgClass, CStr(Mid(msgClass, intLoc + 1)))
+        Err.Clear
+        Set objPA = fld.PropertyAccessor
+        arrErrors = objPA.SetProperties(arrSchema, arrValues)
+        If Err <> 0 Then
+            strMsg = "Error " & Err.Number & ": " & _
+            Err.Description
+        End If
+        If Not (IsEmpty(arrErrors)) Then
+            For i = 0 To UBound(arrErrors)
+                If IsError(arrErrors(i)) Then
+                    strMsg = strMsg & vbCrLf & _
+                             arrSchema(i) & vbCrLf & _
+                             CStr(arrErrors(i)) & " - " & _
+                             Error(Mid(CStr(arrErrors(i)), 7))
+                End If
+            Next
+        End If
+    Else
+        strMsg = msgClass & " cannot be used as the " & _
+                 "default form for the """ & fld.name & _
+                 """ folder."
+    End If
+    If strMsg <> "" Then
+        MsgBox strMsg, vbExclamation, _
+               "Problem Processing Form Class"
+    End If
+    Set objPA = Nothing
+End Sub
+
+Sub create_task()
+    
+    Dim oExplorer As Outlook.Explorer
+    Dim oMessage As Outlook.MailItem
+    Dim oTask As Outlook.TaskItem
+    Dim msgCount As Integer
+    Dim myTasksFolder As Outlook.Folder
+    Dim myNameSpace As Outlook.NameSpace
+    
+    MailboxFolder = "\\Mailbox - SP, OrderAdmin [PROCESS/RO]\Tasks\Order Entry"
+    CustomTaskClass = "IPM.Task.BESt_OE_SP"
+    
+    Set myNameSpace = Application.GetNamespace("MAPI")
+    
+    Set oExplorer = Outlook.ActiveExplorer.CurrentFolder.GetExplorer
+        
+    msgCount = 0
+    
+    For Each Item In oExplorer.Selection                        'Check items in current folder
+        msgCount = msgCount + 1                                 'increase counter
+        If oExplorer.Selection.Item(msgCount).Class = 43 Then   'Only do for Mail Items
+                Set oMessage = oExplorer.Selection.Item(msgCount)
+                        
+                Set myTasksFolder = GetFolder(MailboxFolder) 'myNameSpace.PickFolder
+                Set myItems = myTasksFolder.items
+                
+                'Call SetFolderDefaultForm(myTasksFolder, "IPM.Task.BEStOCUK")
+                
+                Set oTask = myItems.Add("IPM.Task")
+                oTask.MessageClass = CustomTaskClass
+                
+                
+                With oTask
+                    .Body = oMessage.Body
+                    .Importance = oMessage.Importance
+                    
+                    'Attachment Handler
+                    If oMessage.Attachments.Count > 0 Then
+                        Dim attCount As Integer
+                        attCount = 0
+
+                        'Copy Attachments to new task
+                        For Each Attachment In oMessage.Attachments
+                            Dim oAttachment As Outlook.Attachment
+                            Dim attPath As String
+                            Dim attName As String
+
+                            attCount = attCount + 1
+                            
+'                            MsgBox oMessage.Attachments.Item(attCount).type
+                            If Not oMessage.Attachments.Item(attCount).Type = 6 Then
+                            
+                                attPath = "C:\"
+                                attName = oMessage.Attachments.Item(attCount).FileName
+    
+                                oMessage.Attachments.Item(attCount).SaveAsFile (attPath & attName)
+                                oTask.Attachments.Add (attPath & attName)
+                            Else
+                                MsgBox ("This type of attachment cannot be embedded in the task." & _
+                                        vbCrLf & vbCrLf & _
+                                        "However, it is still in the attached Original Message.")
+                            End If
+                        Next
+                    End If
+                    
+                    'Flag Handler
+                    If oMessage.FlagStatus = 2 Then     'Message is flagged
+'                        MsgBox oMessage.FlagRequest
+                        Select Case oMessage.FlagRequest
+                            Case "Follow up"
+                                .Subject = "Follow up with " & oMessage.SenderName & _
+                                            " about " & oMessage.Subject & " (e-mail)"
+                            Case "Call"
+                                .Subject = "Call " & oMessage.SenderName & _
+                                            " about " & oMessage.Subject & " (e-mail)"
+                            Case Else
+'                                MsgBox oMessage.FlagRequest
+                        End Select
+                                .ReminderSet = True
+                                .ReminderTime = oMessage.FlagDueBy
+                                .DueDate = oMessage.FlagDueBy
+                    Else
+                        .Subject = oMessage.Subject
+                    End If
+                    
+                    .Contacts = oMessage.SenderName
+                    
+                    'Save New Task
+                    .Save
+                    .Close (olSave)
+                
+                End With
+                
+                'Delete Original Message
+                If MsgBox("Delete the Original Messsage from Inbox?", vbYesNo) = vbYes Then
+                    oMessage.Delete
+                End If
+                
+        End If
+    Next
+
+End Sub
+
+
+Sub new_task()
+
+    Dim oExplorer As Outlook.Explorer
+    Dim oMessage As Outlook.MailItem
+    Dim oTask As Outlook.TaskItem
+    Dim msgCount As Integer
+    Dim myTasksFolder As Outlook.Folder
+    Dim myNameSpace As Outlook.NameSpace
+    
+    Dim MailboxFolder As String
+    Dim CustomTaskClass As String
+        
+    MailboxFolder = "\\Mailbox - UKSupport, Expediting [PROCESS/RO]\Tasks\Order Entry"
+    CustomTaskClass = "IPM.Task.BESt_OE_UK"
+    
+    Set myNameSpace = Application.GetNamespace("MAPI")
+    
+    Set oExplorer = Outlook.ActiveExplorer.CurrentFolder.GetExplorer
+    Set myTasksFolder = GetFolder(MailboxFolder) 'myNameSpace.PickFolder
+    Set myItems = myTasksFolder.items
+                
+    'Call SetFolderDefaultForm(myTasksFolder, CustomTaskClass)
+                
+    Set oTask = myItems.Add("IPM.Task")
+    oTask.MessageClass = CustomTaskClass
+    oTask.Subject = "New Task:" & myNameSpace.CurrentUser & Now
+    
+    'Save New Task
+    oTask.Save
+    Task_entryID = oTask.EntryID
+    
+    oTask.Close (olSave)
+    Set oTask = Nothing
+    
+    'Set aTask = myNameSpace.GetItemFromID(Task_entryID)
+    'aTask.Display
+       
+End Sub
+Sub BESt_DOC_export_data()
+
+  Dim myOutlookApp As Application
+  Dim myNameSpace As NameSpace
+  Dim myFolder As MAPIFolder
+  Dim myItems As items
+  Dim myItem As Object
+    
+  Dim myOutlookExp As Outlook.Explorer
+  Dim myOutlookSel As Outlook.Selection
+    
+  Set myOutlookApp = CreateObject("Outlook.Application")
+  Set myNameSpace = myOutlookApp.GetNamespace("MAPI")
+      
+  Set myOutlookExp = myOutlookApp.ActiveExplorer
+  Set myOutlookSel = myOutlookExp.Selection
+  
+  conversion_check = MsgBox("Do you want to check the conversion of tasks?", vbYesNo)
+  If conversion_check = vbYes Then Call convert_task
+  
+  countryname = InputBox("Please type the code of the country (BE, UK, FR, SP, IT, NL):")
+  folder_path = "M:\group management\OF group\Outlook databases\Documentation\" & countryname & "_DocControl.accdb"
+  
+    Set conn = CreateObject("ADODB.Connection")
+    ' Connect to the database
+    strConnect = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & folder_path & ";"
+    conn.Open strConnect
+
+    Set rs = CreateObject("ADODB.Recordset")
+    rs.CursorLocation = 2
+    rs.CursorType = 2
+    rs.LockType = 2
+    
+    rs.Open "SELECT * FROM DocumentationTasks", conn
+    
+  
+  For k = 1 To myOutlookSel.Count
+        
+    Set myItem = myOutlookSel.Item(k)
+    
+    If k Mod 50 = 0 Then response = MsgBox("Task no: " & Str(k) & " out of " & Str(myOutlookSel.Count) & " is retrieved! " & "Task subject: " & myItem.Subject, vbOKCancel)
+    
+    If response = vbCancel Then Exit For
+    '--------------------
+    
+    If rs.RecordCount > 0 Then rs.MoveFirst
+    
+    recordfound = False
+    While (Not rs.EOF) And (recordfound = False)
+    
+      If (rs.Fields("UniqueIDField").Value = myItem.UserProperties("UniqueIDField").Value) Then recordfound = True
+      If (rs.Fields("UniqueIDField").Value <> myItem.UserProperties("UniqueIDField").Value) Then rs.MoveNext
+    
+    Wend
+
+    If Not recordfound Then
+        
+        rs.AddNew
+        
+        rs.Fields("UniqueIDField").Value = myItem.UserProperties("UniqueIDField").Value
+        rs.Fields("Subject").Value = myItem.Subject
+        rs.Fields("CreationTime").Value = myItem.CreationTime
+        rs.Fields("StartDate").Value = myItem.StartDate
+        rs.Fields("DueDate").Value = myItem.DueDate
+        rs.Fields("Complete").Value = myItem.Complete
+        rs.Fields("DateCompleted").Value = myItem.DateCompleted
+        rs.Fields("PercentComplete").Value = myItem.PercentComplete
+        rs.Fields("SchedulePlusPriority").Value = myItem.SchedulePlusPriority
+        rs.Fields("StatusUpdateRecipients").Value = myItem.StatusUpdateRecipients
+
+        For index_field = 0 To rs.Fields.Count - 1
+            
+            If rs.Fields(index_field).name <> "ID" And _
+                rs.Fields(index_field).name <> "Subject" And _
+                rs.Fields(index_field).name <> "CreationTime" And _
+                rs.Fields(index_field).name <> "StartDate" And _
+                rs.Fields(index_field).name <> "DueDate" And _
+                rs.Fields(index_field).name <> "Complete" And _
+                rs.Fields(index_field).name <> "DateCompleted" And _
+                rs.Fields(index_field).name <> "PercentComplete" And _
+                rs.Fields(index_field).name <> "SchedulePlusPriority" And _
+                rs.Fields(index_field).name <> "StatusUpdateRecipients" And _
+                rs.Fields(index_field).name <> "Attachments" Then
+                
+                If myItem.UserProperties(rs.Fields(index_field).name).Value <> "" And _
+                    myItem.UserProperties(rs.Fields(index_field).name).Value <> "None" Then
+                    
+                        rs.Fields(index_field).Value = myItem.UserProperties(rs.Fields(index_field).name).Value
+                End If
+
+                If myItem.UserProperties(rs.Fields(index_field).name).Value = "None" Then
+                    rs.Fields(index_field).Value = #1/1/4501#
+                End If
+                                
+
+            End If
+        Next
+    
+    End If
+    
+    If recordfound Then
+            
+        rs.Fields("UniqueIDField").Value = myItem.UserProperties("UniqueIDField").Value
+        rs.Fields("Subject").Value = myItem.Subject
+        rs.Fields("CreationTime").Value = myItem.CreationTime
+        rs.Fields("StartDate").Value = myItem.StartDate
+        rs.Fields("DueDate").Value = myItem.DueDate
+        rs.Fields("Complete").Value = myItem.Complete
+        rs.Fields("DateCompleted").Value = myItem.DateCompleted
+        rs.Fields("PercentComplete").Value = myItem.PercentComplete
+        rs.Fields("SchedulePlusPriority").Value = myItem.SchedulePlusPriority
+        rs.Fields("StatusUpdateRecipients").Value = myItem.StatusUpdateRecipients
+
+        For index_field = 0 To rs.Fields.Count - 1
+            
+            If rs.Fields(index_field).name <> "ID" And _
+                rs.Fields(index_field).name <> "Subject" And _
+                rs.Fields(index_field).name <> "CreationTime" And _
+                rs.Fields(index_field).name <> "StartDate" And _
+                rs.Fields(index_field).name <> "DueDate" And _
+                rs.Fields(index_field).name <> "Complete" And _
+                rs.Fields(index_field).name <> "DateCompleted" And _
+                rs.Fields(index_field).name <> "PercentComplete" And _
+                rs.Fields(index_field).name <> "SchedulePlusPriority" And _
+                rs.Fields(index_field).name <> "StatusUpdateRecipients" And _
+                rs.Fields(index_field).name <> "Attachments" Then
+                
+                If myItem.UserProperties(rs.Fields(index_field).name).Value <> "" And _
+                    myItem.UserProperties(rs.Fields(index_field).name).Value <> "None" Then
+                    
+                        rs.Fields(index_field).Value = myItem.UserProperties(rs.Fields(index_field).name).Value
+                End If
+
+                If myItem.UserProperties(rs.Fields(index_field).name).Value = "None" Then
+                    rs.Fields(index_field).Value = #1/1/4501#
+                End If
+                                
+
+            End If
+        
+        Next
+    
+    End If
+    
+    rs.UpdateBatch
+    
+    
+    
+        
+  Next k
+  
+    rs.Close
+    conn.Close
+    
+  Set myOlApp = Nothing
+  Set myNameSpace = Nothing
+  Set myFolder = Nothing
+  Set myItems = Nothing
+  Set myItem = Nothing
+
+End Sub
+Sub BESt_OE_export_data()
+
+  Dim myOutlookApp As Application
+  Dim myNameSpace As NameSpace
+  Dim myFolder As MAPIFolder
+  Dim myItems As items
+  Dim myItem As Object
+    
+  Dim myOutlookExp As Outlook.Explorer
+  Dim myOutlookSel As Outlook.Selection
+    
+  Set myOutlookApp = CreateObject("Outlook.Application")
+  Set myNameSpace = myOutlookApp.GetNamespace("MAPI")
+      
+  Set myOutlookExp = myOutlookApp.ActiveExplorer
+  Set myOutlookSel = myOutlookExp.Selection
+  
+  conversion_check = MsgBox("Do you want to check the conversion of tasks?", vbYesNo)
+  If conversion_check = vbYes Then Call convert_task
+  
+  countryname = InputBox("Please type the code of the country (BE, UK, FR, SP, IT, NL):")
+  folder_path = "M:\group management\OF group\Outlook databases\Order Entry\" & countryname & "_OrderEntry.accdb"
+  
+    Set conn = CreateObject("ADODB.Connection")
+    ' Connect to the database
+    strConnect = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & folder_path & ";"
+    conn.Open strConnect
+
+    Set rs = CreateObject("ADODB.Recordset")
+    rs.CursorLocation = 2
+    rs.CursorType = 2
+    rs.LockType = 2
+    
+    rs.Open "SELECT * FROM OrderEntryTasks", conn
+    
+  
+  For k = 1 To myOutlookSel.Count
+        
+    Set myItem = myOutlookSel.Item(k)
+    
+    If k Mod 50 = 0 Then response = MsgBox("Task no: " & Str(k) & " out of " & Str(myOutlookSel.Count) & " is retrieved! " & "Task subject: " & myItem.Subject, vbOKCancel)
+    
+    If response = vbCancel Then Exit For
+    '--------------------
+    
+    If rs.RecordCount > 0 Then rs.MoveFirst
+    
+    recordfound = False
+    While (Not rs.EOF) And (recordfound = False)
+    
+      If (rs.Fields("UniqueIDField").Value = myItem.UserProperties("UniqueIDField").Value) Then recordfound = True
+      If (rs.Fields("UniqueIDField").Value <> myItem.UserProperties("UniqueIDField").Value) Then rs.MoveNext
+    
+    Wend
+
+    If Not recordfound Then
+        
+        rs.AddNew
+        
+        rs.Fields("UniqueIDField").Value = myItem.UserProperties("UniqueIDField").Value
+        rs.Fields("Subject").Value = myItem.Subject
+        rs.Fields("CreationTime").Value = myItem.CreationTime
+        rs.Fields("StartDate").Value = myItem.StartDate
+        rs.Fields("DueDate").Value = myItem.DueDate
+        rs.Fields("Complete").Value = myItem.Complete
+        rs.Fields("DateCompleted").Value = myItem.DateCompleted
+        rs.Fields("PercentComplete").Value = myItem.PercentComplete
+        rs.Fields("SchedulePlusPriority").Value = myItem.SchedulePlusPriority
+        rs.Fields("StatusUpdateRecipients").Value = myItem.StatusUpdateRecipients
+
+        For index_field = 0 To rs.Fields.Count - 1
+            
+            If rs.Fields(index_field).name <> "ID" And _
+                rs.Fields(index_field).name <> "Subject" And _
+                rs.Fields(index_field).name <> "CreationTime" And _
+                rs.Fields(index_field).name <> "StartDate" And _
+                rs.Fields(index_field).name <> "DueDate" And _
+                rs.Fields(index_field).name <> "Complete" And _
+                rs.Fields(index_field).name <> "DateCompleted" And _
+                rs.Fields(index_field).name <> "PercentComplete" And _
+                rs.Fields(index_field).name <> "SchedulePlusPriority" And _
+                rs.Fields(index_field).name <> "StatusUpdateRecipients" And _
+                rs.Fields(index_field).name <> "Attachments" Then
+                
+                If myItem.UserProperties(rs.Fields(index_field).name).Value <> "" And _
+                    myItem.UserProperties(rs.Fields(index_field).name).Value <> "None" Then
+                    
+                        rs.Fields(index_field).Value = myItem.UserProperties(rs.Fields(index_field).name).Value
+                End If
+
+                If myItem.UserProperties(rs.Fields(index_field).name).Value = "None" Then
+                    rs.Fields(index_field).Value = #1/1/4501#
+                End If
+                                
+
+            End If
+        Next
+    
+    End If
+    
+    If recordfound Then
+            
+        rs.Fields("UniqueIDField").Value = myItem.UserProperties("UniqueIDField").Value
+        rs.Fields("Subject").Value = myItem.Subject
+        rs.Fields("CreationTime").Value = myItem.CreationTime
+        rs.Fields("StartDate").Value = myItem.StartDate
+        rs.Fields("DueDate").Value = myItem.DueDate
+        rs.Fields("Complete").Value = myItem.Complete
+        rs.Fields("DateCompleted").Value = myItem.DateCompleted
+        rs.Fields("PercentComplete").Value = myItem.PercentComplete
+        rs.Fields("SchedulePlusPriority").Value = myItem.SchedulePlusPriority
+        rs.Fields("StatusUpdateRecipients").Value = myItem.StatusUpdateRecipients
+
+        For index_field = 0 To rs.Fields.Count - 1
+            
+            If rs.Fields(index_field).name <> "ID" And _
+                rs.Fields(index_field).name <> "Subject" And _
+                rs.Fields(index_field).name <> "CreationTime" And _
+                rs.Fields(index_field).name <> "StartDate" And _
+                rs.Fields(index_field).name <> "DueDate" And _
+                rs.Fields(index_field).name <> "Complete" And _
+                rs.Fields(index_field).name <> "DateCompleted" And _
+                rs.Fields(index_field).name <> "PercentComplete" And _
+                rs.Fields(index_field).name <> "SchedulePlusPriority" And _
+                rs.Fields(index_field).name <> "StatusUpdateRecipients" And _
+                rs.Fields(index_field).name <> "Attachments" Then
+                
+                If myItem.UserProperties(rs.Fields(index_field).name).Value <> "" And _
+                    myItem.UserProperties(rs.Fields(index_field).name).Value <> "None" Then
+                    
+                        rs.Fields(index_field).Value = myItem.UserProperties(rs.Fields(index_field).name).Value
+                End If
+
+                If myItem.UserProperties(rs.Fields(index_field).name).Value = "None" Then
+                    rs.Fields(index_field).Value = #1/1/4501#
+                End If
+                                
+
+            End If
+        
+        Next
+    
+    End If
+    
+    rs.UpdateBatch
+   
+        
+  Next k
+  
+    rs.Close
+    conn.Close
+    
+  Set myOlApp = Nothing
+  Set myNameSpace = Nothing
+  Set myFolder = Nothing
+  Set myItems = Nothing
+  Set myItem = Nothing
+
+End Sub
+Sub BESt_OC_export_data()
+
+  Dim myOutlookApp As Application
+  Dim myNameSpace As NameSpace
+  Dim myFolder As MAPIFolder
+  Dim myItems As items
+  Dim myItem As Object
+    
+  Dim myOutlookExp As Outlook.Explorer
+  Dim myOutlookSel As Outlook.Selection
+    
+  Set myOutlookApp = CreateObject("Outlook.Application")
+  Set myNameSpace = myOutlookApp.GetNamespace("MAPI")
+      
+  Set myOutlookExp = myOutlookApp.ActiveExplorer
+  Set myOutlookSel = myOutlookExp.Selection
+  
+  conversion_check = MsgBox("Do you want to check the conversion of tasks?", vbYesNo)
+  If conversion_check = vbYes Then Call convert_task
+  
+  countryname = InputBox("Please type the code of the country (UK, FR, SP, IT, NL, NEE):")
+  folder_path = "M:\group management\OF group\Outlook databases\Order Admin\" & countryname & "_OrderAdmin.accdb"
+  
+    Set conn = CreateObject("ADODB.Connection")
+    ' Connect to the database
+    strConnect = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & folder_path & ";"
+    conn.Open strConnect
+
+    Set rs = CreateObject("ADODB.Recordset")
+    rs.CursorLocation = 2
+    rs.CursorType = 2
+    rs.LockType = 2
+    
+    rs.Open "SELECT * FROM OrderAdminTasks", conn
+    
+  
+  For k = 1 To myOutlookSel.Count
+        
+    Set myItem = myOutlookSel.Item(k)
+    
+    If k Mod 50 = 0 Then response = MsgBox("Task no: " & Str(k) & " out of " & Str(myOutlookSel.Count) & " is retrieved! " & "Task subject: " & myItem.Subject, vbOKCancel)
+    
+    If response = vbCancel Then Exit For
+    '--------------------
+    
+    If rs.RecordCount > 0 Then rs.MoveFirst
+    
+    recordfound = False
+    While (Not rs.EOF) And (recordfound = False)
+    
+      If (rs.Fields("UniqueIDField").Value = myItem.UserProperties("UniqueIDField").Value) Then recordfound = True
+      If (rs.Fields("UniqueIDField").Value <> myItem.UserProperties("UniqueIDField").Value) Then rs.MoveNext
+    
+    Wend
+
+    If Not recordfound Then
+        
+        rs.AddNew
+        
+        rs.Fields("UniqueIDField").Value = myItem.UserProperties("UniqueIDField").Value
+        rs.Fields("Subject").Value = myItem.Subject
+        rs.Fields("CreationTime").Value = myItem.CreationTime
+        rs.Fields("StartDate").Value = myItem.StartDate
+        rs.Fields("DueDate").Value = myItem.DueDate
+        rs.Fields("Complete").Value = myItem.Complete
+        rs.Fields("DateCompleted").Value = myItem.DateCompleted
+        rs.Fields("PercentComplete").Value = myItem.PercentComplete
+        rs.Fields("SchedulePlusPriority").Value = myItem.SchedulePlusPriority
+        rs.Fields("StatusUpdateRecipients").Value = myItem.StatusUpdateRecipients
+
+        For index_field = 0 To rs.Fields.Count - 1
+            
+            If rs.Fields(index_field).name <> "ID" And _
+                rs.Fields(index_field).name <> "Subject" And _
+                rs.Fields(index_field).name <> "CreationTime" And _
+                rs.Fields(index_field).name <> "StartDate" And _
+                rs.Fields(index_field).name <> "DueDate" And _
+                rs.Fields(index_field).name <> "Complete" And _
+                rs.Fields(index_field).name <> "DateCompleted" And _
+                rs.Fields(index_field).name <> "PercentComplete" And _
+                rs.Fields(index_field).name <> "SchedulePlusPriority" And _
+                rs.Fields(index_field).name <> "StatusUpdateRecipients" And _
+                rs.Fields(index_field).name <> "Attachments" Then
+                
+                If myItem.UserProperties(rs.Fields(index_field).name).Value <> "" And _
+                    myItem.UserProperties(rs.Fields(index_field).name).Value <> "None" Then
+                    
+                        rs.Fields(index_field).Value = Left(myItem.UserProperties(rs.Fields(index_field).name).Value, 255)
+                End If
+
+                If myItem.UserProperties(rs.Fields(index_field).name).Value = "None" Then
+                    rs.Fields(index_field).Value = #1/1/4501#
+                End If
+                                
+
+            End If
+        Next
+    
+    End If
+    
+    If recordfound Then
+            
+        rs.Fields("UniqueIDField").Value = myItem.UserProperties("UniqueIDField").Value
+        rs.Fields("Subject").Value = myItem.Subject
+        rs.Fields("CreationTime").Value = myItem.CreationTime
+        rs.Fields("StartDate").Value = myItem.StartDate
+        rs.Fields("DueDate").Value = myItem.DueDate
+        rs.Fields("Complete").Value = myItem.Complete
+        rs.Fields("DateCompleted").Value = myItem.DateCompleted
+        rs.Fields("PercentComplete").Value = myItem.PercentComplete
+        rs.Fields("SchedulePlusPriority").Value = myItem.SchedulePlusPriority
+        rs.Fields("StatusUpdateRecipients").Value = myItem.StatusUpdateRecipients
+
+        For index_field = 0 To rs.Fields.Count - 1
+            
+            If rs.Fields(index_field).name <> "ID" And _
+                rs.Fields(index_field).name <> "Subject" And _
+                rs.Fields(index_field).name <> "CreationTime" And _
+                rs.Fields(index_field).name <> "StartDate" And _
+                rs.Fields(index_field).name <> "DueDate" And _
+                rs.Fields(index_field).name <> "Complete" And _
+                rs.Fields(index_field).name <> "DateCompleted" And _
+                rs.Fields(index_field).name <> "PercentComplete" And _
+                rs.Fields(index_field).name <> "SchedulePlusPriority" And _
+                rs.Fields(index_field).name <> "StatusUpdateRecipients" And _
+                rs.Fields(index_field).name <> "Attachments" Then
+                
+                If myItem.UserProperties(rs.Fields(index_field).name).Value <> "" And _
+                    myItem.UserProperties(rs.Fields(index_field).name).Value <> "None" Then
+                    
+                        rs.Fields(index_field).Value = Left(myItem.UserProperties(rs.Fields(index_field).name).Value, 255)
+                End If
+
+                If myItem.UserProperties(rs.Fields(index_field).name).Value = "None" Then
+                    rs.Fields(index_field).Value = #1/1/4501#
+                End If
+                                
+
+            End If
+        
+        Next
+    
+    End If
+    
+    rs.UpdateBatch
+   
+        
+  Next k
+  
+    rs.Close
+    conn.Close
+    
+  Set myOlApp = Nothing
+  Set myNameSpace = Nothing
+  Set myFolder = Nothing
+  Set myItems = Nothing
+  Set myItem = Nothing
+
+End Sub

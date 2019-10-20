@@ -1,0 +1,55 @@
+Option Explicit
+
+Sub MakeMultipleXLSfromWB()
+  'Split worksheets in current workbook into
+  ' many separate workbooks  D.McRitchie, 2004-06-12
+  'Close each module  AND the VBE before running to save time
+  ' provides a means of seeing how big sheets really are
+  'Hyperlinks and formulas pointing to other worksheets within
+  ' the original workbook will usually be unuseable in the new workbooks.
+    Dim CurWkbook As Workbook
+    Dim wkSheet As Worksheet
+    Dim newWkbook As Workbook
+    Dim wkSheetName As String
+    Dim shtcnt(3) As Long
+    Dim xpathname As String, dtimestamp As String
+    dtimestamp = Format(Now, "yyyymmdd_hhmmss")
+    xpathname = "c:\temp\D" & dtimestamp & "\"
+    MkDir xpathname
+    Set CurWkbook = Application.ActiveWorkbook
+
+    shtcnt(2) = ActiveWorkbook.Sheets.Count
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+    For Each wkSheet In CurWkbook.Worksheets
+      shtcnt(1) = shtcnt(1) + 1
+      Application.StatusBar = shtcnt(1) & "/" & shtcnt(2) & _
+          "  " & wkSheet.Name
+      wkSheetName = Trim(wkSheet.Name)
+      If wkSheetName = Left(Application.ActiveWorkbook.Name, _
+         Len(Application.ActiveWorkbook.Name) - 4) Then _
+         wkSheetName = wkSheetName & "_D" & dtimestamp
+      Workbooks.Add
+      ActiveWorkbook.SaveAs _
+         filename:=xpathname & wkSheetName & ".xls", _
+         FileFormat:=xlNormal, Password:="", _
+         WriteResPassword:="", CreateBackup:=False, _
+         ReadOnlyRecommended:=False
+      Set newWkbook = ActiveWorkbook
+      
+      Application.DisplayAlerts = False
+      newWkbook.Worksheets("sheet1").Delete
+      On Error Resume Next
+      newWkbook.Worksheets(wkSheet.Name).Delete
+      On Error GoTo 0
+      Application.DisplayAlerts = True
+ 
+      CurWkbook.Worksheets(wkSheet.Name).Copy Before:=newWkbook.Sheets(1)
+      'no duplicate sheet1 because they begin with "a"
+      ActiveWorkbook.Save
+      ActiveWorkbook.Close
+    Next wkSheet
+    Application.StatusBar = False      'return control to Excel
+    Application.Calculation = xlCalculationAutomatic
+    Application.ScreenUpdating = True
+End Sub

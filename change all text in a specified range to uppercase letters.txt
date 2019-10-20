@@ -1,0 +1,9 @@
+Sub Uppercase()
+'Loop to cycle through each cell in the specified range
+
+   For Each x in Range ("A1:A5")
+   'Change the text in the range to uppercase letters.
+   x.Value=UCase(x.value)
+   Next
+
+End Sub 

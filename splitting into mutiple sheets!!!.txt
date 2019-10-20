@@ -1,0 +1,70 @@
+Sub Split_macro()
+'
+' Split_macro Macro
+' Macro created on 07/01/2010 by Marius Chioran
+'
+' Description: This macro splits the content of one sheet (the main sheet) in more sheets.
+' Method: The macro reads the value of each cell in column A (in the active sheet)
+'         and creates a new sheet for each entry (sheet name = entry name)
+'         In each new sheet, the macro will copy all the lines (from the main sheet) that
+'         have the same entry on column A (each entry can apear more than once).
+'
+' IMPORTANT! Column A in the starting sheet must be alphabeticaly orderd before running this macro!
+'
+
+    ' Variable declaration
+    Dim personName, previousPersonName As String
+    Dim mainSheet As String
+    
+    mainSheet = ActiveSheet.Name            ' Find main sheet's name
+
+    MsgBox "Please press OK and then wait for the macro to finish!"
+    
+    ' |>---------- BEGIN Main LOOP ----------<|
+    
+    Sheets(mainSheet).Activate              ' Go to the main sheet
+    Range("A2").Select
+    previousPersonName = mainSheet 'Init previousPersonName
+      
+    ' ----- Parcurge coloana curenta pana gaseste prima celula goala
+    Do While ActiveCell.Value <> ""
+        
+        personName = ActiveCell.Value       ' Read Data from current Cell
+                
+        ' If new person name is found
+        If personName <> previousPersonName Then
+            
+            Sheets.Add.Name = personName    ' Add new sheet (with the person name)
+            ' Move the new sheet at the end
+            Sheets(personName).Move After:=Sheets(previousPersonName)
+            ' -- Copy header row to the new sheet
+            Sheets(previousPersonName).Activate      ' Go to previous sheet
+            Rows(1).Copy                    ' Copy header row
+            Sheets(personName).Activate     ' Go to the new sheet
+            ActiveSheet.Paste               ' Paste copyed row from the main sheet to the new sheet
+            Selection.Offset(1, 0).Select   ' Go to next line
+            ' --
+            previousPersonName = personName ' Change the previousPersonName
+        End If
+        
+        ' --- Copy current row from the main sheet to the new sheet
+        Sheets(mainSheet).Activate          ' Go to the main sheet
+        Rows(ActiveCell.Row).Copy           ' Copy current row
+        ' Test MsgBox ActiveCell.Row
+            
+        Sheets(personName).Activate         ' Go to the new sheet
+        ActiveSheet.Paste                   ' Paste copyed row
+        Selection.Offset(1, 0).Select       ' Go to next line
+           
+        Sheets(mainSheet).Activate          ' Go to the main sheet
+        Selection.Offset(1, 0).Select       ' Go to the next cell below
+        ' ---
+    Loop
+    ' -----
+    
+    Application.CutCopyMode = False         ' Clear clopboard
+    MsgBox "DONE! Your file is ready!"
+    
+    ' |>---------- END Main LOOP ----------<|
+        
+End Sub

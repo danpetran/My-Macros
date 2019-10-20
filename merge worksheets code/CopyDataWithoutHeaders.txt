@@ -1,0 +1,101 @@
+Option Explicit
+
+'Copy from row 2 till the last row with data
+'
+'Note: This example use the function LastRow
+'
+'In example 1 you can see that you can copy all cells on a worksheet with this line:
+'Set CopyRng = sh.UsedRange
+'
+'But what if we do not want to copy the same header row each time.
+'The example below will copy from row 2 till the last row with data on each sheet
+'
+'Change the start row in the macro if you want to start in a different row.
+'
+''Fill in the start row
+'StartRow = 2
+
+'When you run one of the examples it will first delete the summary worksheet
+'named RDBMergeSheet if it exists and then adds a new one to the workbook.
+'This ensures that the data is always up to date after you run the code.
+
+'*****READ THE TIPS on the website****
+
+
+Sub CopyDataWithoutHeaders()
+    Dim sh As Worksheet
+    Dim DestSh As Worksheet
+    Dim Last As Long
+    Dim shLast As Long
+    Dim CopyRng As Range
+    Dim StartRow As Long
+
+    With Application
+        .ScreenUpdating = False
+        .EnableEvents = False
+    End With
+
+    'Delete the sheet "RDBMergeSheet" if it exist
+    Application.DisplayAlerts = False
+    On Error Resume Next
+    ActiveWorkbook.Worksheets("RDBMergeSheet").Delete
+    On Error GoTo 0
+    Application.DisplayAlerts = True
+
+    'Add a worksheet with the name "RDBMergeSheet"
+    Set DestSh = ActiveWorkbook.Worksheets.Add
+    DestSh.Name = "RDBMergeSheet"
+
+    'Fill in the start row
+    StartRow = 2
+
+    'loop through all worksheets and copy the data to the DestSh
+    For Each sh In ActiveWorkbook.Worksheets
+
+        'Loop through all worksheets except the RDBMerge worksheet and the
+        'Information worksheet, you can ad more sheets to the array if you want.
+        If IsError(Application.Match(sh.Name, _
+                                     Array(DestSh.Name, "Information"), 0)) Then
+
+            'Find the last row with data on the DestSh and sh
+            Last = LastRow(DestSh)
+            shLast = LastRow(sh)
+
+            'If sh is not empty and if the last row >= StartRow copy the CopyRng
+            If shLast > 0 And shLast >= StartRow Then
+
+                'Set the range that you want to copy
+                Set CopyRng = sh.Range(sh.Rows(StartRow), sh.Rows(shLast))
+
+                'Test if there enough rows in the DestSh to copy all the data
+                If Last + CopyRng.Rows.Count > DestSh.Rows.Count Then
+                    MsgBox "There are not enough rows in the Destsh"
+                    GoTo ExitTheSub
+                End If
+
+                'This example copies values/formats, if you only want to copy the
+                'values or want to copy everything look below example 1 on this page
+                CopyRng.Copy
+                With DestSh.Cells(Last + 1, "A")
+                    .PasteSpecial xlPasteValues
+                    .PasteSpecial xlPasteFormats
+                    Application.CutCopyMode = False
+                End With
+
+            End If
+
+        End If
+    Next
+
+ExitTheSub:
+
+    Application.GoTo DestSh.Cells(1)
+
+    'AutoFit the column width in the DestSh sheet
+    DestSh.Columns.AutoFit
+
+    With Application
+        .ScreenUpdating = True
+        .EnableEvents = True
+    End With
+End Sub

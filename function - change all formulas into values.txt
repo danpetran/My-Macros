@@ -1,0 +1,10 @@
+Sub ChangeToValue()
+
+Dim rng As Range
+
+With ActiveSheet
+  For Each rng In .UsedRange
+    rng.Value = rng.Value
+Next rng
+End With
+End Sub

@@ -1,0 +1,23 @@
+Sub Macro1()
+    Dim rLastCell As Range
+    Dim rCells As Range
+    Dim strName As String
+    Dim lLoop As Long, lCopy As Long
+    Dim wbNew As Workbook
+     
+    With ThisWorkbook.Sheets(1)
+        Set rLastCell = .Cells.Find(What:="*", After:=[A1], SearchDirection:=xlPrevious)
+         
+        For lLoop = 1 To rLastCell.Row Step 50
+            lCopy = lCopy + 1
+            Set wbNew = Workbooks.Add
+            .Range(.Cells(lLoop, 1), .Cells(lLoop + 50, .Columns.Count)).EntireRow.Copy _
+            Destination:=wbNew.Sheets(1).Range("A1")
+            wbNew.Close SaveChanges:=True, Filename:="Chunk" & lCopy & "Rows" & lLoop & "-" & lLoop + 50
+        Next lLoop
+    End With
+     
+     
+End Sub
+
+
