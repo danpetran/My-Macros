@@ -9,39 +9,39 @@ Function MyFunc(rCell As Range)
    
    Select Case rCell.Value
 Case 1000 To 2199:
-    sStr = "Carlo Birchall;Martin Bronkhorst;Cor Hensen"
+    sStr = "text1"
 Case 2200 To 2999:
-    sStr = "Eppo Jol;Martin Bronkhorst;Cor Hensen"
+    sStr = "text2"
 Case 3000 To 3199:
-    sStr = "Peter Sachs;Jan Gerkema;Cor Hensen"
+    sStr = "text3"
 Case 3200 To 3299:
-    sStr = "Arthur Kramer;Erwin van Os;Cor Hensen"
+    sStr = "text4"
 Case 3300 To 3599:
-    sStr = "Peter Horbach;Jan Willem Dijkshoorn;Eddie Bosch"
+    sStr = "text5"
 Case 3600 To 3699:
-    sStr = "Carlo Birchall;Martin Bronkhorst;Cor Hensen"
+    sStr = "text6"
 Case 3700 To 4299:
-    sStr = "Peter Horbach;Jan Willem Dijkshoorn;Eddie Bosch"
+    sStr = "text7"
 Case 4300 To 4750:
-    sStr = "Arthur Kramer;Erwin van Os;Cor Hensen"
+    sStr = "text8"
 Case 4751 To 4799:
-    sStr = "Abdelali Baabbi;Ab de Groot;Eddie Bosch"
+    sStr = "text9"
 Case 4800 To 4899:
-    sStr = "Arthur Kramer;Erwin van Os;Cor Hensen"
+    sStr = "text10"
 Case 4900 To 6499:
-    sStr = "Abdelali Baabbi;Ab de Groot;Eddie Bosch"
+    sStr = "text11"
 Case 6500 To 7799:
-    sStr = "Gerard Ensink;Ab de Groot;Eddie Bosch"
+    sStr = "text12"
 Case 7800 To 7999:
-    sStr = "Ronald Hekman;Jan Willem Dijkshoorn;Eddie Bosch"
+    sStr = "text12"
 Case 8000 To 8099:
-    sStr = "Peter Horbach;Jan Willem Dijkshoorn;Eddie Bosch"
+    sStr = "text13"
 Case 8100 To 8199:
-    sStr = "Gerard Ensink;Ab de Groot;Eddie Bosch"
+    sStr = "text2"
 Case 8200 To 8299:
-    sStr = "Peter Horbach;Jan Willem Dijkshoorn;Eddie Bosch"
+    sStr = "text1"
 Case 8300 To 9999:
-    sStr = "Ronald Hekman;Jan Willem Dijkshoorn;Eddie Bosch"
+    sStr = "text0"
 Case Else: sStr = "No Range found for Input"
    End Select
  MyFunc = sStr
