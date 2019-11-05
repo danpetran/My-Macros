@@ -1,7 +1,7 @@
 Sub Split_macro()
 '
 ' Split_macro Macro
-' Macro created on 07/01/2010 by Marius Chioran
+' Macro created on 07/01/2010
 '
 ' Description: This macro splits the content of one sheet (the main sheet) in more sheets.
 ' Method: The macro reads the value of each cell in column A (in the active sheet)
